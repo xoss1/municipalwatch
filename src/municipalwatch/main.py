@@ -41,7 +41,7 @@ def monitorizar_todos():
         id_actual = extractor(session, item)
 
         if id_actual is not None:
-            id_anterior = historial.get(nombre, 0)
+            id_anterior = historial.get(nombre, tipo)
             if id_actual > id_anterior:
                 novedades.append({
                     "seccion": nombre,
