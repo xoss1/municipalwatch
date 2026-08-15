@@ -27,6 +27,8 @@ def monitorizar_todos():
 
     print(f"🔍 Iniciando escaneo de {len(ayuntamientos)} ayuntamientos...\n")
 
+    ayuntamientos = sorted(ayuntamientos, key=lambda x: x["nombre"].lower())
+
     for item in ayuntamientos:
         nombre = item["nombre"]
         tipo = item["type"]
