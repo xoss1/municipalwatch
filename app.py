@@ -53,7 +53,7 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
         if extractor:
             id_actual = extractor(session, item)
             if id_actual is not None:
-                id_anterior = historial.get(nombre, tipo)
+                id_anterior = historial.get(nombre, 0)
                 if id_actual > id_anterior:
                     novedades.append({
                         "seccion": nombre,
