@@ -1,50 +1,55 @@
 import re
-from bs4 import BeautifulSoup
+import streamlit as st
 
 def extract_type_1(session, item):
-    """Extractor para plataformas del Tipo 1 (SEDELECTRONICA / Gestiona)."""
+    """Extractor para plataformas Tipo 1 con depuración en tiempo real."""
     headers = {
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
         "Connection": "keep-alive",
-        "Host": item["host"],
-        "Referer": "https://www.google.com/",
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
-        "Upgrade-insecure-requests": "1"
+        "Host": item.get("host", ""),
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
     }
 
     try:
-        session.get(item["url"], timeout=10)
-        time.sleep(1)
-        response = session.get(item["url"], headers=headers, timeout=15)
-        soup = BeautifulSoup(response.text, "html.parser")
+        url = item["url"]
+        st.write(f"🔍 **[DEBUG] Escaneando {item['nombre']}:** `{url}`")
         
-        tbody = soup.find("tbody", id="id92")
-        if not tbody:
+        response = session.get(url, headers=headers, timeout=15, allow_redirects=True)
+        st.write(f"👉 **[DEBUG] Código HTTP respuesta:** `{response.status_code}`")
+
+        if response.status_code != 200:
+            st.error(f"❌ La web devolvió un estado no válido: {response.status_code}")
             return None
 
-        expedientes_td = tbody.find_all("td", class_="class_folderCode")
-        
-        ids_encontrados = []
-        for td in expedientes_td:
-            texto = td.get_text(strip=True) # Ejemplos: "1604/2026", "1995/2024", "JGL/2026/11"
-            
-            # Buscamos patrones del tipo NÚMERO/AÑO (ej. 1604/2026)
-            match_standard = re.search(r'(\d+)/(\d{4})', texto)
-            # Buscamos patrones del tipo TEXTO/AÑO/NÚMERO (ej. JGL/2026/11)
-            match_custom = re.search(r'/(\d{4})/(\d+)', texto)
+        html_text = response.text
+        st.write(f"📄 **[DEBUG] Longitud del HTML recibido:** `{len(html_text)}` caracteres")
 
-            if match_standard:
-                num, ano = match_standard.groups()
-                # Formamos un ID ponderado por año: 202601604 (Año 2026 + número formateado)
-                ids_encontrados.append(int(f"{ano}{int(num):05d}"))
-            elif match_custom:
-                ano, num = match_custom.groups()
+        # Comprobar si id92 está presente en la respuesta
+        tiene_id92 = "id92" in html_text
+        st.write(f"🧩 **[DEBUG] ¿Contiene 'id92' el HTML?:** `{tiene_id92}`")
+
+        # Buscar apariciones de preview-document
+        uuids = re.findall(r'preview-document/([a-f0-9-]+)', html_text)
+        st.write(f"📎 **[DEBUG] Documentos 'preview-document' hallados:** `{len(uuids)}`")
+
+        # Buscar expedientes con la regex
+        expedientes_std = re.findall(r'(\d+)/(\d{4})', html_text)
+        st.write(f"📑 **[DEBUG] Expedientes extraídos por Regex:** `{expedientes_std[:3]}`...")
+
+        ids_encontrados = []
+        for num, ano in expedientes_std:
+            # Filtramos números coherentes de expedientes (evitar capturar fechas)
+            if len(num) <= 5 and int(ano) >= 2020:
                 ids_encontrados.append(int(f"{ano}{int(num):05d}"))
 
         if ids_encontrados:
-            return max(ids_encontrados)
+            id_maximo = max(ids_encontrados)
+            st.success(f"✅ **[DEBUG] ID Máximo calculado para {item['nombre']}:** `{id_maximo}`")
+            return id_maximo
+        else:
+            st.warning(f"⚠️ **[DEBUG] No se pudo calcular ningún ID numérico para {item['nombre']}.**")
 
     except Exception as e:
-        print(f"   ❌ Error en extractor tipo 1 [{item['nombre']}]: {e}")
+        st.error(f"💥 **[DEBUG] Excepción capturada en {item['nombre']}:** `{e}`")
 
     return None
