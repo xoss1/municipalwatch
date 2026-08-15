@@ -25,6 +25,6 @@
     {"nombre": "Campos del Río", "type": 1, "host": "camposdelrio.sedelectronica.es", "url": "https://camposdelrio.sedelectronica.es/board", "referer": ""},
     {"nombre": "Ceutí", "type" : 1, "host": "ceuti.sedelectronica.es", "url": "https://ceuti.sedelectronica.es/board", "referer": ""},
     {"nombre": "La Unión", "type": 1, "host": "launion.sedelectronica.es", "url": "https://launion.sedelectronica.es/board", "referer": ""},
-    {"nombre": "San Javier", "type": 1, "host": "sanjavier.sedelectronica.es", "url": "https://sanjavier.sedelectronica.es/board", "referer": None},
-    {"nombre": "Totana", "type": 1, "host": "totana.sedelectronica.es", "url": "https://totana.sedelectronica.es/board", "referer": None}
+    {"nombre": "San Javier", "type": 1, "host": "sanjavier.sedelectronica.es", "url": "https://sanjavier.sedelectronica.es/board", "referer": ""},
+    {"nombre": "Totana", "type": 1, "host": "totana.sedelectronica.es", "url": "https://totana.sedelectronica.es/board", "referer": ""}
 ]
