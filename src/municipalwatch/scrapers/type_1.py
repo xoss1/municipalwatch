@@ -4,10 +4,12 @@ from bs4 import BeautifulSoup
 def extract_type_1(session, item):
     """Extractor para plataformas del Tipo 1 (SEDELECTRONICA / Gestiona)."""
     headers = {
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
         "Connection": "keep-alive",
         "Host": item["host"],
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/151.0.0.0 Safari/537.36"
+        "Referer": "https://www.google.com/",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+        "Upgrade-insecure-requests": "1"
     }
 
     try:
