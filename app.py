@@ -43,7 +43,8 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
     progress_bar = st.progress(0)
     status_text = st.empty()
 
-    ayuntamientos = sorted(ayuntamientos, key=lambda x: x["nombre"].lower())
+    REMPLAZOS = str.maketrans("áéíóúÁÉÍÓÚñÑ", "aeiouAEIOUnN")
+    ayuntamientos = sorted(ayuntamientos, key=lambda x: x["nombre"].translate(REMPLAZOS).lower())
     
     for idx, item in enumerate(ayuntamientos):
         nombre = item["nombre"]
