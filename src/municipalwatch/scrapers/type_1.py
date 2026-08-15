@@ -1,4 +1,3 @@
-# src/municipalwatch/scrapers/type_1.py
 import re
 from bs4 import BeautifulSoup
 
@@ -19,18 +18,25 @@ def extract_type_1(session, item):
         if not tbody:
             return None
 
-        # 1. Buscamos todas las celdas de expediente en la tabla
         expedientes_td = tbody.find_all("td", class_="class_folderCode")
         
         ids_encontrados = []
         for td in expedientes_td:
             texto = td.get_text(strip=True) # Ejemplos: "1604/2026", "1995/2024", "JGL/2026/11"
-            # 2. Extraemos los dígitos del número de expediente
-            match = re.search(r'(\d+)', texto)
-            if match:
-                ids_encontrados.append(int(match.group(1)))
+            
+            # Buscamos patrones del tipo NÚMERO/AÑO (ej. 1604/2026)
+            match_standard = re.search(r'(\d+)/(\d{4})', texto)
+            # Buscamos patrones del tipo TEXTO/AÑO/NÚMERO (ej. JGL/2026/11)
+            match_custom = re.search(r'/(\d{4})/(\d+)', texto)
 
-        # 3. Misma lógica del Tipo 0: devolver el mayor de la lista
+            if match_standard:
+                num, ano = match_standard.groups()
+                # Formamos un ID ponderado por año: 202601604 (Año 2026 + número formateado)
+                ids_encontrados.append(int(f"{ano}{int(num):05d}"))
+            elif match_custom:
+                ano, num = match_custom.groups()
+                ids_encontrados.append(int(f"{ano}{int(num):05d}"))
+
         if ids_encontrados:
             return max(ids_encontrados)
 
