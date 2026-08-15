@@ -26,5 +26,12 @@
     {"nombre": "Ceutí", "type" : 1, "host": "ceuti.sedelectronica.es", "url": "https://ceuti.sedelectronica.es/board", "referer": ""},
     {"nombre": "La Unión", "type": 1, "host": "launion.sedelectronica.es", "url": "https://launion.sedelectronica.es/board", "referer": ""},
     {"nombre": "San Javier", "type": 1, "host": "sanjavier.sedelectronica.es", "url": "https://sanjavier.sedelectronica.es/board", "referer": ""},
-    {"nombre": "Totana", "type": 1, "host": "totana.sedelectronica.es", "url": "https://totana.sedelectronica.es/board", "referer": ""}
+    {"nombre": "Totana", "type": 1, "host": "totana.sedelectronica.es", "url": "https://totana.sedelectronica.es/board", "referer": ""},
+    {"nombre": "Alcantarilla", "type": 2, "host": "alcantarilla.sedipualba.es", "url": "https://alcantarilla.sedipualba.es/tablondeanuncios/", "referer": ""},
+    {"nombre": "Caravaca de la Cruz", "type": 2, "host": "caravaca.sedipualba.es", "url": "https://caravaca.sedipualba.es/tablondeanuncios/", "referer": ""},
+    {"nombre": "Cartagena", "type": 2, "host": "cartagena.sedipualba.es", "url": "https://cartagena.sedipualba.es/tablondeanuncios/", "referer": ""},
+    {"nombre": "Cieza", "type": 2, "host": "cieza.sedipualba.es", "url": "https://cieza.sedipualba.es/tablondeanuncios/", "referer": ""},
+    {"nombre": "Las Torres de Cotillas", "type": 2, "host": "cotillas.sedipualba.es", "url": "https://cotillas.sedipualba.es/tablondeanuncios/", "referer": ""},
+    {"nombre": "Jumilla", "type": 2, "host": "jumilla.sedipualba.es", "url": "https://jumilla.sedipualba.es/tablondeanuncios/", "referer": ""},
+    {"nombre": "Yecla", "type": 2, "host": "yecla.sedipualba.es", "url": "https://yecla.sedipualba.es/tablondeanuncios/", "referer": ""}
 ]
