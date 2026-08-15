@@ -45,7 +45,7 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
     
     for idx, item in enumerate(ayuntamientos):
         nombre = item["nombre"]
-        tipo = item.get("type", 0)
+        tipo = item["type"]
         
         status_text.text(f"Escaneando: {nombre} (Tipo {tipo})...")
         
@@ -53,7 +53,7 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
         if extractor:
             id_actual = extractor(session, item)
             if id_actual is not None:
-                id_anterior = historial.get(nombre, 0)
+                id_anterior = historial.get(nombre, tipo)
                 if id_actual > id_anterior:
                     novedades.append({
                         "seccion": nombre,
