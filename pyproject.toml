@@ -7,7 +7,7 @@ name = "municipalwatch"
 version = "0.1.0"
 description = "Monitorización automatizada y alertas de edictos municipales mediante filtrado por palabras clave."
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 license = { text = "MIT" }
 authors = [
     { name = "Tu Nombre", email = "tuemail@ejemplo.com" }
