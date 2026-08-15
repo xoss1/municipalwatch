@@ -27,7 +27,8 @@ def monitorizar_todos():
 
     print(f"🔍 Iniciando escaneo de {len(ayuntamientos)} ayuntamientos...\n")
 
-    ayuntamientos = sorted(ayuntamientos, key=lambda x: x["nombre"].lower())
+    REMPLAZOS = str.maketrans("áéíóúÁÉÍÓÚñÑ", "aeiouAEIOUnN")
+    ayuntamientos = sorted(ayuntamientos, key=lambda x: x["nombre"].translate(REMPLAZOS).lower())
 
     for item in ayuntamientos:
         nombre = item["nombre"]
