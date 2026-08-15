@@ -3,7 +3,7 @@ import re
 import time
 from bs4 import BeautifulSoup
 
-def extract_type_0(session, item):
+def extract_type_1(session, item):
     """Extractor para plataformas del Tipo 1 (SEDELECTRONICA)"""
     headers = {
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
