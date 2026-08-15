@@ -14,8 +14,6 @@ def extract_type_1(session, item):
     }
 
     try:
-        session.get(item["referer"], timeout=10)
-        time.sleep(1)
         response = session.get(item["url"], headers=headers, timeout=15)
         soup = BeautifulSoup(response.text, "html.parser")
         tbody = soup.find("tbody", id="id92")
