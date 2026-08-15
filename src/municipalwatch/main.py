@@ -29,7 +29,7 @@ def monitorizar_todos():
 
     for item in ayuntamientos:
         nombre = item["nombre"]
-        tipo = item.get("type", 0)
+        tipo = item["type"]
         
         print(f"📡 Comprobando: [{nombre}] (Tipo {tipo})")
         extractor = obtener_extractor(tipo)
