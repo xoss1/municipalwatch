@@ -32,24 +32,48 @@ def extract_type_1(session, item):
         uuids = re.findall(r'preview-document/([a-f0-9-]+)', html_text)
         #st.write(f"📎 **[DEBUG] Documentos 'preview-document' hallados:** `{len(uuids)}`")
 
-        # Buscar expedientes con la regex
-        expedientes_std = re.findall(r'(\d+)/(\d{4})', html_text)
-        #st.write(f"📑 **[DEBUG] Expedientes extraídos por Regex:** `{expedientes_std[:3]}`...")
-
         ids_encontrados = []
-        for num, ano in expedientes_std:
-            # Filtramos números coherentes de expedientes (evitar capturar fechas)
-            if len(num) <= 5 and int(ano) >= 2020:
-                ids_encontrados.append(int(f"{ano}{int(num):05d}"))
+
+        # 1. Estrategia primaria: Extraer filas (<tr>) para vincular Fecha de Publicación + Nº Expediente
+        filas = re.findall(r'<tr[^>]*>(.*?)</tr>', html_text, re.DOTALL)
+        for fila in filas:
+            match_exp = re.search(r'class_folderCode[^>]*>.*?<span>([^<]+)</span>', fila, re.DOTALL)
+            match_fecha = re.search(r'class_dateFrom[^>]*>.*?<span>([^<]+)</span>', fila, re.DOTALL)
+
+            if match_exp and match_fecha:
+                txt_exp = match_exp.group(1).strip()
+                txt_fecha = match_fecha.group(1).strip()
+
+                # Extraer Fecha (DD/MM/AAAA -> AAAAMMDD)
+                m_fecha = re.search(r'(\d{2})/(\d{2})/(\d{4})', txt_fecha)
+                # Extraer primer bloque numérico del expediente
+                m_num = re.search(r'(\d+)', txt_exp)
+
+                if m_fecha:
+                    dia, mes, ano = m_fecha.groups()
+                    fecha_int = int(f"{ano}{mes}{dia}")
+                    num_exp = int(m_num.group(1)) if m_num else 0
+                    
+                    # ID Incremental: AAAAMMDD + Nº Expediente a 5 dígitos (Ej: 2026080401995)
+                    ids_encontrados.append(int(f"{fecha_int}{num_exp:05d}"))
+
+        #st.write(f"📑 **[DEBUG] IDs Fecha+Expediente generados:** `{ids_encontrados[:3]}`...")
+
+        # 2. Plan B: Si la tabla cambia de estructura, usará los UUIDs como respaldo
+        if not ids_encontrados and uuids:
+            #st.write("⚠️ **[DEBUG] Fallback a conteo por UUIDs**")
+            ids_encontrados.append(len(set(uuids)))
 
         if ids_encontrados:
             id_maximo = max(ids_encontrados)
-            #st.success(f"✅ **[DEBUG] ID Máximo calculado para {item['nombre']}:** `{id_maximo}`")
+            #st.success(f"✅ **[DEBUG] ID Máximo calculated para {item['nombre']}:** `{id_maximo}`")
             return id_maximo
         else:
             #st.warning(f"⚠️ **[DEBUG] No se pudo calcular ningún ID numérico para {item['nombre']}.**")
+            pass
 
     except Exception as e:
-        st.error(f"💥 **[DEBUG] Excepción capturada en {item['nombre']}:** `{e}`")
+        #st.error(f"💥 **[DEBUG] Excepción capturada en {item['nombre']}:** `{e}`")
+        pass
 
     return None
