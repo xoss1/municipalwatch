@@ -20,11 +20,11 @@
     {"nombre": "Santomera", "type": 0, "host": "sede.santomera.regiondemurcia.es","url": "https://sede.santomera.regiondemurcia.es/web/tablonEdictos.do?opcion=5&idDoc=&tip_pub=&procedencia=&fechaDesde=16%2F05%2F2026&desc=&referencia=", "referer": "https://sede.santomera.regiondemurcia.es/web/tablonEdictos.do?opcion=0&entidad=30901&idioma=1"},
     {"nombre": "Ulea", "type": 0, "host": "sede.ulea.regiondemurcia.es","url": "https://sede.ulea.regiondemurcia.es/web/tablonEdictos.do?opcion=5&idDoc=&tip_pub=&procedencia=&fechaDesde=16%2F05%2F2026&desc=&referencia=", "referer": "https://sede.ulea.regiondemurcia.es/web/tablonEdictos.do?opcion=0&entidad=30040&idioma=1"},
     {"nombre": "Villanueva del Río Segura", "type": 0, "host": "sede.villanuevadelriosegura.regiondemurcia.es","url": "https://sede.villanuevadelriosegura.regiondemurcia.es/web/tablonEdictos.do?opcion=5&idDoc=&tip_pub=&procedencia=&fechaDesde=16%2F05%2F2026&desc=&referencia=", "referer": "https://sede.villanuevadelriosegura.regiondemurcia.es/web/tablonEdictos.do?opcion=0&entidad=30042&idioma=1"},
-    {"nombre": "Abarán", "type": 1, "host": "abaran.sedelectronica.es", "url": "https://abaran.sedelectronica.es/board", "referer": None},
-    {"nombre": "Águilas", "type": 1, "host": "aguilas.sedelectronica.es", "url": "https://aguilas.sedelectronica.es/board", "referer": None},
-    {"nombre": "Campos del Río", "type": 1, "host": "camposdelrio.sedelectronica.es", "url": "https://camposdelrio.sedelectronica.es/board", "referer": None},
-    {"nombre": "Ceutí", "type" : 1, "host": "ceuti.sedelectronica.es", "url": "https://ceuti.sedelectronica.es/board", "referer": None},
-    {"nombre": "La Unión", "type": 1, "host": "launion.sedelectronica.es", "url": "https://launion.sedelectronica.es/board", "referer": None},
+    {"nombre": "Abarán", "type": 1, "host": "abaran.sedelectronica.es", "url": "https://abaran.sedelectronica.es/board", "referer": ""},
+    {"nombre": "Águilas", "type": 1, "host": "aguilas.sedelectronica.es", "url": "https://aguilas.sedelectronica.es/board", "referer": ""},
+    {"nombre": "Campos del Río", "type": 1, "host": "camposdelrio.sedelectronica.es", "url": "https://camposdelrio.sedelectronica.es/board", "referer": ""},
+    {"nombre": "Ceutí", "type" : 1, "host": "ceuti.sedelectronica.es", "url": "https://ceuti.sedelectronica.es/board", "referer": ""},
+    {"nombre": "La Unión", "type": 1, "host": "launion.sedelectronica.es", "url": "https://launion.sedelectronica.es/board", "referer": ""},
     {"nombre": "San Javier", "type": 1, "host": "sanjavier.sedelectronica.es", "url": "https://sanjavier.sedelectronica.es/board", "referer": None},
     {"nombre": "Totana", "type": 1, "host": "totana.sedelectronica.es", "url": "https://totana.sedelectronica.es/board", "referer": None}
 ]
