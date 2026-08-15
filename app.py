@@ -59,7 +59,7 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
                         "seccion": nombre,
                         "id_nuevo": id_actual,
                         "id_anterior": id_anterior,
-                        "url": item["url"]
+                        "url": item["url"],
                         "referer": item["referer"]
                     })
                     historial[nombre] = id_actual
