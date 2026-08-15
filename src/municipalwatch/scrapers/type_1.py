@@ -12,29 +12,29 @@ def extract_type_1(session, item):
 
     try:
         url = item["url"]
-        st.write(f"🔍 **[DEBUG] Escaneando {item['nombre']}:** `{url}`")
+        #st.write(f"🔍 **[DEBUG] Escaneando {item['nombre']}:** `{url}`")
         
         response = session.get(url, headers=headers, timeout=15, allow_redirects=True)
-        st.write(f"👉 **[DEBUG] Código HTTP respuesta:** `{response.status_code}`")
+        #st.write(f"👉 **[DEBUG] Código HTTP respuesta:** `{response.status_code}`")
 
         if response.status_code != 200:
-            st.error(f"❌ La web devolvió un estado no válido: {response.status_code}")
+            #st.error(f"❌ La web devolvió un estado no válido: {response.status_code}")
             return None
 
         html_text = response.text
-        st.write(f"📄 **[DEBUG] Longitud del HTML recibido:** `{len(html_text)}` caracteres")
+        #st.write(f"📄 **[DEBUG] Longitud del HTML recibido:** `{len(html_text)}` caracteres")
 
         # Comprobar si id92 está presente en la respuesta
         tiene_id92 = "id92" in html_text
-        st.write(f"🧩 **[DEBUG] ¿Contiene 'id92' el HTML?:** `{tiene_id92}`")
+        #st.write(f"🧩 **[DEBUG] ¿Contiene 'id92' el HTML?:** `{tiene_id92}`")
 
         # Buscar apariciones de preview-document
         uuids = re.findall(r'preview-document/([a-f0-9-]+)', html_text)
-        st.write(f"📎 **[DEBUG] Documentos 'preview-document' hallados:** `{len(uuids)}`")
+        #st.write(f"📎 **[DEBUG] Documentos 'preview-document' hallados:** `{len(uuids)}`")
 
         # Buscar expedientes con la regex
         expedientes_std = re.findall(r'(\d+)/(\d{4})', html_text)
-        st.write(f"📑 **[DEBUG] Expedientes extraídos por Regex:** `{expedientes_std[:3]}`...")
+        #st.write(f"📑 **[DEBUG] Expedientes extraídos por Regex:** `{expedientes_std[:3]}`...")
 
         ids_encontrados = []
         for num, ano in expedientes_std:
@@ -44,10 +44,10 @@ def extract_type_1(session, item):
 
         if ids_encontrados:
             id_maximo = max(ids_encontrados)
-            st.success(f"✅ **[DEBUG] ID Máximo calculado para {item['nombre']}:** `{id_maximo}`")
+            #st.success(f"✅ **[DEBUG] ID Máximo calculado para {item['nombre']}:** `{id_maximo}`")
             return id_maximo
         else:
-            st.warning(f"⚠️ **[DEBUG] No se pudo calcular ningún ID numérico para {item['nombre']}.**")
+            #st.warning(f"⚠️ **[DEBUG] No se pudo calcular ningún ID numérico para {item['nombre']}.**")
 
     except Exception as e:
         st.error(f"💥 **[DEBUG] Excepción capturada en {item['nombre']}:** `{e}`")
