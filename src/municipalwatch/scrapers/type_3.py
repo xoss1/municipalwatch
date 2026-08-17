@@ -4,10 +4,18 @@ import streamlit as st
 def extract_type_3(session, item):
     """Extractor para plataformas Tipo 3 ("Carpeta Ciudadana") con depuración en tiempo real."""
     headers = {
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-        "Connection": "keep-alive",
-        "Host": item.get("host", ""),
-        "Referer": item.get("referer", ""),
+        "Accept": "text/xml"
+        "Accept-Encoding": "gzip, deflate, br, zstd"
+        "Accept-Language": "es-ES,es;q=0.9"
+        "Connection": "keep-alive"
+        "Content-Length": "234"
+        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+        "Host": item["host"]
+        "Origin": "https://"+item["host"]
+        "Referer": item["referer"]
+        "Sec-Fetch-Dest": "empty"
+        "Sec-Fetch-Mode": "cors"
+        "Sec-Fetch-Site": "same-origin"
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36"
     }
 
