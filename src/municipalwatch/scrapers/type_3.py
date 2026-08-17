@@ -27,6 +27,8 @@ def extract_type_3(session, item):
     }
 
     try:
+        session.get(item["referer"], timeout=10)
+        time.sleep(1)
         url = item["url"]
         st.write(f"🔍 **[DEBUG] Escaneando {item['nombre']}:** `{url}`")
         
