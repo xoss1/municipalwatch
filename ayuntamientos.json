@@ -33,5 +33,6 @@
     {"nombre": "Cieza", "type": 2, "host": "cieza.sedipualba.es", "url": "https://cieza.sedipualba.es/tablondeanuncios/", "referer": ""},
     {"nombre": "Las Torres de Cotillas", "type": 2, "host": "cotillas.sedipualba.es", "url": "https://cotillas.sedipualba.es/tablondeanuncios/", "referer": ""},
     {"nombre": "Jumilla", "type": 2, "host": "jumilla.sedipualba.es", "url": "https://jumilla.sedipualba.es/tablondeanuncios/", "referer": ""},
-    {"nombre": "Yecla", "type": 2, "host": "yecla.sedipualba.es", "url": "https://yecla.sedipualba.es/tablondeanuncios/", "referer": ""}
+    {"nombre": "Yecla", "type": 2, "host": "yecla.sedipualba.es", "url": "https://yecla.sedipualba.es/tablondeanuncios/", "referer": ""},
+    {"nombre": "Molina de Segura", "type": 3, "host": "https://cciudadana.molinadesegura.es/", "url": "https://cciudadana.molinadesegura.es/sta/CarpetaPublic/submitAjax.aa&aaxmlrequest=true&eventScreenId=TABLON&eventComponent=&eventObject=LISTATABLON&eventAction=LISTATABLON&eventArguments=KEY%3Dall&PAGE_CODE=TABLON&APP_CODE=STA&PAGE_COMPLETE=&ROOTID=31&HFC=HEADER_OVC%23FOOTER_OVC&SESSION_REQUIRED=false&", "referer": "https://cciudadana.molinadesegura.es/sta/CarpetaPublic/doEvent?APP_CODE=STA&PAGE_CODE=TABLON"}
 ]
