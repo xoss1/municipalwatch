@@ -8,16 +8,28 @@ def extract_type_3(session, item):
     url = item["url"]
     nombre = item["nombre"]
     rootid = ""
+    eventscreenId = ""
+    pagecode = ""
+    hfc = ""
     esMazarron = False
 
     if nombre == "Molina de Segura":
         rootid = "31"
+        eventscreenId = "TABLON"
+        pagecode = "TABLON"
+        hfc = "HEADER_OVC#FOOTER_OVC"
     elif nombre == "Mazarrón":
         esMazarron = True
     elif nombre == "San Pedro del Pinatar":
         rootid = "2"
+        eventscreenId = "PTS_TABLON"
+        pagecode = "PTS_TABLON"
+        hfc = "HEADER_PTS#FOOTER_PTS"
     elif nombre == "Torre-Pacheco":
         rootid = "1"
+        eventscreenId = "PTS2_TABLON"
+        pagecode = "PTS2_TABLON"
+        hfc = "HEADER#FOOTER"
 
     headers = {
         "Accept": "text/xml",
@@ -37,16 +49,16 @@ def extract_type_3(session, item):
 
     payload = {
         "aaxmlrequest": "true",
-        "eventScreenId": "TABLON",
+        "eventScreenId": eventscreenId,
         "eventComponent": "",
         "eventObject": "LISTATABLON",
         "eventAction": "LISTATABLON",
         "eventArguments": "KEY=all",
-        "PAGE_CODE": "TABLON",
+        "PAGE_CODE": pagecode,
         "APP_CODE": "STA",
         "PAGE_COMPLETE": "",
         "ROOTID": rootid,
-        "HFC": "HEADER_OVC#FOOTER_OVC",
+        "HFC": hfc,
         "SESSION_REQUIRED": "false"
     }
 
