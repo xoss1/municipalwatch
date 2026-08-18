@@ -22,26 +22,26 @@ def extract_type_4(session, item):
         soup = BeautifulSoup(response.text, "html.parser")
         ids_encontrados = []
       
-    for row in soup.select('#result_list tbody tr'):
-      date_el = row.select_one('.publication_date')
-      title_el = row.select_one('.title a')
-      
-      if date_el and title_el:
-          date_text = date_el.get_text(strip=True)
-          dt = datetime.strptime(date_text, "%d/%m/%Y %H:%M")
-          ids_encontrados.append(int(dt.timestamp()))
-        
-          """
-          entries.append({
-              'title': title_el.get_text(strip=True),
-              'publication_date': date_text,
-              'synthetic_id': int(dt.timestamp()) # A mayor fecha/hora, mayor número de ID
-          })
-          """
-        if ids_encontrados:
-            return max([int(i) for i in ids_encontrados])
-
-    except Exception as e:
-        print(f"   ❌ Error en extractor tipo 0 [{item['nombre']}]: {e}")
+        for row in soup.select('#result_list tbody tr'):
+          date_el = row.select_one('.publication_date')
+          title_el = row.select_one('.title a')
+          
+          if date_el and title_el:
+              date_text = date_el.get_text(strip=True)
+              dt = datetime.strptime(date_text, "%d/%m/%Y %H:%M")
+              ids_encontrados.append(int(dt.timestamp()))
+            
+              """
+              entries.append({
+                  'title': title_el.get_text(strip=True),
+                  'publication_date': date_text,
+                  'synthetic_id': int(dt.timestamp()) # A mayor fecha/hora, mayor número de ID
+              })
+              """
+            if ids_encontrados:
+                return max([int(i) for i in ids_encontrados])
+    
+        except Exception as e:
+            print(f"   ❌ Error en extractor tipo 0 [{item['nombre']}]: {e}")
 
     return None
