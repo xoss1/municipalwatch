@@ -4,7 +4,7 @@ import time
 from bs4 import BeautifulSoup
 from datetime import datetime
 
-def extract_type_0(session, item):
+def extract_type_4(session, item):
     """Extractor para plataformas de la Red de Sedes de la Región de Murcia (Tipo 0)."""
     headers = {
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
