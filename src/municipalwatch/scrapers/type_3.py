@@ -91,7 +91,7 @@ def extract_type_3(session, item):
     
             ids_encontrados = []
     
-            PATTERN = r'\{\s*"dboid"\s*:\s*"(?P<dboid>\d+)".*?"pubDateIni"\s*:\s*\{\s*(?:[^{}]*?"year"\s*:\s*(?P<year>\d+))(?:[^{}]*?"month"\s*:\s*(?P<month>\d+))(?:[^{}]*?"day"\s*:\s*(?P<day>\d+))(?:[^{}]*?"hour"\s*:\s*(?P<hour>\d+))(?:[^{}]*?"minute"\s*:\s*(?P<minute>\d+))(?:[^{}]*?"second"\s*:\s*(?P<second>\d+))'
+            pattern = r'\{\s*"dboid"\s*:\s*"(?P<dboid>\d+)".*?"pubDateIni"\s*:\s*\{\s*(?:[^{}]*?"year"\s*:\s*(?P<year>\d+))(?:[^{}]*?"month"\s*:\s*(?P<month>\d+))(?:[^{}]*?"day"\s*:\s*(?P<day>\d+))(?:[^{}]*?"hour"\s*:\s*(?P<hour>\d+))(?:[^{}]*?"minute"\s*:\s*(?P<minute>\d+))(?:[^{}]*?"second"\s*:\s*(?P<second>\d+))'
     
             for match in pattern.finditer(html_text):
                 d = match.groupdict()
