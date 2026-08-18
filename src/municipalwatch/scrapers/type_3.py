@@ -92,8 +92,9 @@ def extract_type_3(session, item):
             ids_encontrados = []
     
             pattern = r'\{\s*"dboid"\s*:\s*"(?P<dboid>\d+)".*?"pubDateIni"\s*:\s*\{\s*(?:[^{}]*?"year"\s*:\s*(?P<year>\d+))(?:[^{}]*?"month"\s*:\s*(?P<month>\d+))(?:[^{}]*?"day"\s*:\s*(?P<day>\d+))(?:[^{}]*?"hour"\s*:\s*(?P<hour>\d+))(?:[^{}]*?"minute"\s*:\s*(?P<minute>\d+))(?:[^{}]*?"second"\s*:\s*(?P<second>\d+))'
+            regex = re.compile(pattern, re.DOTALL)
     
-            for match in pattern.finditer(html_text):
+            for match in regex.finditer(html_text):
                 d = match.groupdict()
         
                 fecha_str = f"{int(d['year']):04d}{int(d['month']):02d}{int(d['day']):02d}{int(d['hour']):02d}{int(d['minute']):02d}{int(d['second']):02d}"
