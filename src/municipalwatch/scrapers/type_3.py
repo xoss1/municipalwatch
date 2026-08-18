@@ -6,6 +6,18 @@ import streamlit as st
 def extract_type_3(session, item):
     """Extractor para plataformas Tipo 3 ("Carpeta Ciudadana") con depuración en tiempo real."""
     url = item["url"]
+    nombre = item["nombre"]
+    rootid = ""
+
+    if nombre == "Molina de Segura":
+        rootid = "31"
+    elif nombre == "Mazarrón":
+        rootid = ""
+    elif nombre == "San Pedro del Pinatar":
+        rootid = "2"
+    elif nombre == "Torre-Pacheco":
+        rootid = "1"
+
     headers = {
         "Accept": "text/xml",
         "Accept-Encoding": "gzip, deflate, br, zstd",
@@ -32,7 +44,7 @@ def extract_type_3(session, item):
         "PAGE_CODE": "TABLON",
         "APP_CODE": "STA",
         "PAGE_COMPLETE": "",
-        "ROOTID": "31",
+        "ROOTID": rootid,
         "HFC": "HEADER_OVC#FOOTER_OVC",
         "SESSION_REQUIRED": "false"
     }
@@ -60,18 +72,21 @@ def extract_type_3(session, item):
             session = requests.Session()
             session_aa = session.get(url, impersonate="chrome", proxies=proxies)
             time.sleep(1)
-            #st.write(f"🔍 **[DEBUG] Estatus de sesion GET {session_aa.status_code}:** `{url}`")
-            #st.write(f"🔍 **[DEBUG] Escaneando {item['nombre']}:** `{url}`")
-            
-            response = requests.post(url, proxies=proxies, data=payload)
-            #st.write(f"👉 **[DEBUG] Código HTTP respuesta:** `{response.status_code}`")
+            st.write(f"🔍 **[DEBUG] Estatus de sesion GET {session_aa.status_code}:** `{url}`")
+            st.write(f"🔍 **[DEBUG] Escaneando {item['nombre']}:** `{url}`")
+
+            if nombre == 'Mazarrón':
+                response = requests.get(url, proxies=proxies)
+            else:
+                response = requests.post(url, proxies=proxies, data=payload)
+            st.write(f"👉 **[DEBUG] Código HTTP respuesta:** `{response.status_code}`")
     
             if response.status_code != 200:
-                #st.error(f"❌ La web devolvió un estado no válido: {response.status_code}")
+                st.error(f"❌ La web devolvió un estado no válido: {response.status_code}")
                 return None
     
             html_text = response.text
-            #st.write(f"📄 **[DEBUG] Longitud del HTML recibido:** `{len(html_text)}` caracteres")
+            st.write(f"📄 **[DEBUG] Longitud del HTML recibido:** `{len(html_text)}` caracteres")
     
             ids_encontrados = []
     
@@ -98,11 +113,11 @@ def extract_type_3(session, item):
                 id_sintetico = int(f"{fecha_str}{bloque_unico}")
                 ids_encontrados.append(id_sintetico)
                 
-            #st.write(f"📄 **[DEBUG] id encontrados:** '{ids_encontrados}'")
+            st.write(f"📄 **[DEBUG] id encontrados:** '{ids_encontrados}'")
             if ids_encontrados:
                 return max([int(i) for i in ids_encontrados])
         except Exception as e:
-            #st.error(f"💥 **[DEBUG] Excepción capturada en {item['nombre']}:** `{e}`")
+            st.error(f"💥 **[DEBUG] Excepción capturada en {item['nombre']}:** `{e}`")
             pass
 
     return None
