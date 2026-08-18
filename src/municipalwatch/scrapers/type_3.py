@@ -1,4 +1,5 @@
 from curl_cffi import requests
+import time
 import streamlit as st
 
 def extract_type_3(session, item):
