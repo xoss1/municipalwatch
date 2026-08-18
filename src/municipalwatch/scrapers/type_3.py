@@ -59,9 +59,10 @@ def extract_type_3(session, item):
             session = requests.Session()
             session_aa = session.get(url, impersonate="chrome", proxies=proxies)
             time.sleep(1)
+            st.write(f"🔍 **[DEBUG] Estatus de sesion GET {session_aa.status_code}:** `{url}`")
             st.write(f"🔍 **[DEBUG] Escaneando {item['nombre']}:** `{url}`")
             
-            response = session.post(url, proxies=proxies, data=payload, impersonate="chrome")
+            response = requests.post(url, proxies=proxies, data=payload)
             st.write(f"👉 **[DEBUG] Código HTTP respuesta:** `{response.status_code}`")
     
             if response.status_code != 200:
