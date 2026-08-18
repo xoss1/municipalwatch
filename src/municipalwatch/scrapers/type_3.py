@@ -96,7 +96,7 @@ def extract_type_3(session, item):
                 bloque_unico = d['dboid'][8:-5]
         
                 id_sintetico = int(f"{fecha_str}{bloque_unico}")
-                ids_sinteticos.append(id_sintetico)
+                ids_encontrados.append(id_sintetico)
                 
             st.write(f"📄 **[DEBUG] id encontrados:** '{ids_encontrados}'")
             if ids_encontrados:
