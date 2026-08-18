@@ -89,7 +89,7 @@ def extract_type_3(session, item):
                 re.DOTALL
             )
     
-            for match in pattern.finditer(texto_dataset):
+            for match in pattern.finditer(html_text):
                 d = match.groupdict()
         
                 fecha_str = f"{int(d['year']):04d}{int(d['month']):02d}{int(d['day']):02d}{int(d['hour']):02d}{int(d['minute']):02d}{int(d['second']):02d}"
