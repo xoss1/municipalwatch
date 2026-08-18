@@ -42,6 +42,6 @@ def extract_type_4(session, item):
                 return max([int(i) for i in ids_encontrados])
     
     except Exception as e:
-        print(f"   ❌ Error en extractor tipo 0 [{item['nombre']}]: {e}")
+        print(f"   ❌ Error en extractor tipo 4 [{item['nombre']}]: {e}")
 
     return None
