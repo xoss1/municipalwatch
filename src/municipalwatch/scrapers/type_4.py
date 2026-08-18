@@ -38,8 +38,8 @@ def extract_type_4(session, item):
                   'synthetic_id': int(dt.timestamp()) # A mayor fecha/hora, mayor número de ID
               })
               """
-            if ids_encontrados:
-                return max([int(i) for i in ids_encontrados])
+        if ids_encontrados:
+            return max([int(i) for i in ids_encontrados])
     
     except Exception as e:
         print(f"   ❌ Error en extractor tipo 4 [{item['nombre']}]: {e}")
