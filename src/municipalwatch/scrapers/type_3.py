@@ -12,6 +12,7 @@ def extract_type_3(session, item):
     pagecode = ""
     hfc = ""
     esMazarron = False
+    esAlhama = False
 
     if nombre == "Molina de Segura":
         rootid = "31"
@@ -20,6 +21,8 @@ def extract_type_3(session, item):
         hfc = "HEADER_OVC#FOOTER_OVC"
     elif nombre == "Mazarrón":
         esMazarron = True
+    elif nombre == "Alhama de Murcia":
+        esAlhama = True
     elif nombre == "San Pedro del Pinatar":
         rootid = "2"
         eventscreenId = "PTS_TABLON"
@@ -89,7 +92,7 @@ def extract_type_3(session, item):
             st.write(f"🔍 **[DEBUG] Estatus de sesion GET {session_aa.status_code}:** `{url}`")
             st.write(f"🔍 **[DEBUG] Escaneando {item['nombre']}:** `{url}`")
 
-            if esMazarron:
+            if esMazarron or esAlhama:
                 response = requests.get(item["referer"], proxies=proxies, verify=False)
             else:
                 response = requests.post(url, proxies=proxies, data=payload, verify=False)
