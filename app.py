@@ -81,7 +81,7 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
         for nov in novedades:
             with st.expander(f"📍 {nov['seccion']} (Nuevo ID: {nov['id_nuevo']})"):
                 st.write(f"**ID Anterior:** {nov['id_anterior']} ➔ **ID Nuevo:** {nov['id_nuevo']}")
-                if nov['tipo']==0:
+                if nov['tipo'] in (0,3):
                     st.markdown(f"[🔗 Ver tablón de edictos]({nov['referer']})")
                 else:
                     st.markdown(f"[🔗 Ver tablón de edictos]({nov['url']})")
