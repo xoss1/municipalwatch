@@ -67,4 +67,4 @@ def extract_type_5(session, item):
 	except Exception as e:
 		print(f"   ❌ Error en extractor tipo 4 [{item['nombre']}]: {e}")
 
-return None
+	return None
