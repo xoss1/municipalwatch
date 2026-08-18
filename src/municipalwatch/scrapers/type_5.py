@@ -6,15 +6,15 @@ from bs4 import BeautifulSoup
 from datetime import datetime
 
 def extract_type_5(session, item):
-	"""Extractor para plataformas de la Red de Sedes de la Región de Murcia (Tipo 4)."""
-	headers = {
-	"Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-	"Accept-encoding": "gzip, deflate, br, zstd",
-	"Connection": "keep-alive",
-	"Host": item["host"],
-	"Referer": item["referer"],
-	"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/151.0.0.0 Safari/537.36"
-	}
+"""Extractor para plataformas de la Red de Sedes de la Región de Murcia (Tipo 4)."""
+headers = {
+"Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+"Accept-encoding": "gzip, deflate, br, zstd",
+"Connection": "keep-alive",
+"Host": item["host"],
+"Referer": item["referer"],
+"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/151.0.0.0 Safari/537.36"
+}
 
 	try:
 		response = requests.get(item["url"])
@@ -53,6 +53,7 @@ def extract_type_5(session, item):
 				
 				# Opción Alternativa Formateada: YYYYMMDD + 4 dígitos de posición inversa
 				synthetic_id_formatted = int(f"{dt.strftime('%Y%m%d')}{position_weight:04d}")
+		
 				
 				"""
 				
@@ -63,8 +64,7 @@ def extract_type_5(session, item):
 				'synthetic_id_formatted': synthetic_id_formatted
 				})
 				"""
-			
+		print(ids_encontrados)	
 	except Exception as e:
 		print(f"   ❌ Error en extractor tipo 4 [{item['nombre']}]: {e}")
-
-	return None
+		return None
