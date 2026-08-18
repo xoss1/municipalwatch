@@ -64,7 +64,7 @@ headers = {
 				'synthetic_id_formatted': synthetic_id_formatted
 				})
 				"""
-		print(ids_encontrados)	
+
 	except Exception as e:
 		print(f"   ❌ Error en extractor tipo 4 [{item['nombre']}]: {e}")
-		return None
+	return None
