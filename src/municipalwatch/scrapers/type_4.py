@@ -1,11 +1,12 @@
 # src/municipalwatch/scrapers/type_4.py (AYTO LORCA)
 import re
+import requests
 import time
 from bs4 import BeautifulSoup
 from datetime import datetime
 
 def extract_type_4(session, item):
-    """Extractor para plataformas de la Red de Sedes de la Región de Murcia (Tipo 0)."""
+    """Extractor para plataformas de la Red de Sedes de la Región de Murcia (Tipo 4)."""
     headers = {
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
         "Accept-encoding": "gzip, deflate, br, zstd",
@@ -14,11 +15,9 @@ def extract_type_4(session, item):
         "Referer": item["referer"],
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/151.0.0.0 Safari/537.36"
     }
-
+    
     try:
-        session.get(item["referer"], timeout=10)
-        time.sleep(1)
-        response = session.get(item["url"], headers=headers, timeout=15)
+        response = requests.get(item["url"])
         soup = BeautifulSoup(response.text, "html.parser")
         ids_encontrados = []
       
@@ -30,7 +29,6 @@ def extract_type_4(session, item):
               date_text = date_el.get_text(strip=True)
               dt = datetime.strptime(date_text, "%d/%m/%Y %H:%M")
               ids_encontrados.append(int(dt.timestamp()))
-            
               """
               entries.append({
                   'title': title_el.get_text(strip=True),
@@ -43,5 +41,5 @@ def extract_type_4(session, item):
     
     except Exception as e:
         print(f"   ❌ Error en extractor tipo 4 [{item['nombre']}]: {e}")
-
+    
     return None
