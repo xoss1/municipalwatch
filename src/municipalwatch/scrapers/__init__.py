@@ -4,7 +4,7 @@ from .type_1 import extract_type_1
 from .type_2 import extract_type_2
 from .type_3 import extract_type_3
 from .type_4 import extract_type_4
-from -type_5 import extract_type_5
+from .type_5 import extract_type_5
 
 # Mapeo extensible: cuando crees la plataforma tipo 1, solo agregas "1: extract_type_1"
 SCRAPERS = {
