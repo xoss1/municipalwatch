@@ -8,11 +8,12 @@ def extract_type_3(session, item):
     url = item["url"]
     nombre = item["nombre"]
     rootid = ""
+    esMazarron = False
 
     if nombre == "Molina de Segura":
         rootid = "31"
     elif nombre == "Mazarrón":
-        rootid = ""
+        esMazarron = True
     elif nombre == "San Pedro del Pinatar":
         rootid = "2"
     elif nombre == "Torre-Pacheco":
@@ -75,8 +76,8 @@ def extract_type_3(session, item):
             st.write(f"🔍 **[DEBUG] Estatus de sesion GET {session_aa.status_code}:** `{url}`")
             st.write(f"🔍 **[DEBUG] Escaneando {item['nombre']}:** `{url}`")
 
-            if nombre == 'Mazarrón':
-                response = requests.get(url, proxies=proxies)
+            if esMazarron:
+                response = requests.get(item["referer"], proxies=proxies)
             else:
                 response = requests.post(url, proxies=proxies, data=payload)
             st.write(f"👉 **[DEBUG] Código HTTP respuesta:** `{response.status_code}`")
@@ -91,16 +92,16 @@ def extract_type_3(session, item):
             ids_encontrados = []
     
             pattern = re.compile(
-                r'(?:\[\s*\{|,\s*\{)\s*'                      # Coincide con [{ o ,{ (inicio de elemento en el array)
-                r'"dboid"\s*:\s*"(?P<dboid>\d+)".*?'          # Captura solo el DBOID principal del objeto
+                r'\{\s*'
+                r'"dboid"\s*:\s*"(?P<dboid>\d+)".*?'
                 r'"pubDateIni"\s*:\s*\{\s*'
-                r'"year"\s*:\s*(?P<year>\d+)\s*,\s*'
-                r'"month"\s*:\s*(?P<month>\d+)\s*,\s*'
-                r'"day"\s*:\s*(?P<day>\d+)\s*,\s*'
-                r'"timezone"\s*:\s*\d+\s*,\s*'
-                r'"hour"\s*:\s*(?P<hour>\d+)\s*,\s*'
-                r'"minute"\s*:\s*(?P<minute>\d+)\s*,\s*'
-                r'"second"\s*:\s*(?P<second>\d+)',
+                r'(?:[^{}]*?\b"year"\s*:\s*(?P<year>\d+))'
+                r'(?:[^{}]*?\b"month"\s*:\s*(?P<month>\d+))'
+                r'(?:[^{}]*?\b"day"\s*:\s*(?P<day>\d+))'
+                r'(?:[^{}]*?\b"hour"\s*:\s*(?P<hour>\d+))'
+                r'(?:[^{}]*?\b"minute"\s*:\s*(?P<minute>\d+))'
+                r'(?:[^{}]*?\b"second"\s*:\s*(?P<second>\d+))'
+                r'[^{}]*?\}',
                 re.DOTALL
             )
     
