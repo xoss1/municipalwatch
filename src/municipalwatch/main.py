@@ -41,15 +41,25 @@ def monitorizar_todos():
             print(f"   ⚠️ Extractor tipo {tipo} no implementado.")
             continue
 
-        id_actual = extractor(session, item)
+        id_actual = extractor(session, item)[1]
+        resultados = extractor(session, item)[0]
+
+        id = resultados["id"]
+        titulo = resultados["titulo"]
+        fecha_pub = resultados["fecha_publicacion"]
+        fecha_ret = resultados["fecha_retirada"]
+        cod_exp = resultados["codigo_expediente"]
 
         if id_actual is not None:
             id_anterior = historial.get(nombre, 0)
             if id_actual > id_anterior:
                 novedades.append({
                     "seccion": nombre,
-                    "id_nuevo": id_actual,
-                    "id_anterior": id_anterior,
+                    "id" = resultados["id"]
+                    "titulo" = resultados["titulo"]
+                    "fecha_pub" = resultados["fecha_publicacion"]
+                    "fecha_ret" = resultados["fecha_retirada"]
+                    "cod_exp" = resultados["codigo_expediente"]
                     "url": item["url"]
                 })
                 historial[nombre] = id_actual
