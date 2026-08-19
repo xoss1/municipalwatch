@@ -5,7 +5,7 @@ def notificar_novedades(novedades):
     if novedades:
         print(f"🔥 Se encontraron cambios en {len(novedades)} entidad(es):\n")
         for nov in novedades:
-            print(f"• {nov['seccion']}: ID subió de {nov['id_anterior']} ➔ {nov['id_nuevo']}")
+            print(f"• {nov['seccion']}: Novedad detectada {nov['cod_exp']} ➔ {nov['titulo']}")
             print(f"  URL: {nov['url']}\n")
     else:
         print("Cero novedades en todas las páginas rastreadas.")
