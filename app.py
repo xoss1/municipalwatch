@@ -118,55 +118,55 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
 
                 progress_bar.progress((idx + 1) / len(ayuntamientos_filtrados))
             
-            guardar_historial(historial)
-            status_text.text("✅ Escaneo finalizado.")
-            # Guardamos las novedades en session_state para que NO desaparezcan al pulsar botones o toggles
-            st.session_state["novedades"] = novedades_temp
-            
-            st.divider()
+        guardar_historial(historial)
+        status_text.text("✅ Escaneo finalizado.")
+        # Guardamos las novedades en session_state para que NO desaparezcan al pulsar botones o toggles
+        st.session_state["novedades"] = novedades_temp
+        
+        st.divider()
 
-            # Renderizado de Resultados
-            novedades = st.session_state.get("novedades", [])
-            
-            # Resultados
-            if novedades:
-                st.success(f"🔥 ¡Novedades detectadas en {len(st.session_state.novedades)} municipio(s)!")
-                for nov in novedades:
-                    # Determinación de la URL destino según el tipo
-                    url_tablon = nov['referer'] if nov['tipo'] in (0, 3) else nov['url']
+        # Renderizado de Resultados
+        novedades = st.session_state.get("novedades", [])
+        
+        # Resultados
+        if novedades:
+            st.success(f"🔥 ¡Novedades detectadas en {len(st.session_state.novedades)} municipio(s)!")
+            for nov in novedades:
+                # Determinación de la URL destino según el tipo
+                url_tablon = nov['referer'] if nov['tipo'] in (0, 3) else nov['url']
+                
+                # Cabecera con Nombre y Enlace
+                label_expander = f"📍 {nov['seccion']} | [🔗 ver tablón de edictos]({url_tablon})"
+                
+                # Se asigna dinámicamente según el estado del toggle
+                with st.expander(
+                    label_expander, 
+                    expanded=expandir_todos,
+                    key=f"expander_{nov['id_nuevo']}_{expandir_todos}"
+                ):
+                    st.caption(f"ID Anterior: `{nov['id_anterior']}` ➔ ID Nuevo: `{nov['id_nuevo']}`")
                     
-                    # Cabecera con Nombre y Enlace
-                    label_expander = f"📍 {nov['seccion']} | [🔗 ver tablón de edictos]({url_tablon})"
+                    # Obtener la lista de items/bloques extraídos
+                    contenido = nov.get("contenido")
                     
-                    # Se asigna dinámicamente según el estado del toggle
-                    with st.expander(
-                        label_expander, 
-                        expanded=expandir_todos,
-                        key=f"expander_{nov['id_nuevo']}_{expandir_todos}"
-                    ):
-                        st.caption(f"ID Anterior: `{nov['id_anterior']}` ➔ ID Nuevo: `{nov['id_nuevo']}`")
-                        
-                        # Obtener la lista de items/bloques extraídos
-                        contenido = nov.get("contenido")
-                        
-                        if contenido:
-                            # Filtrar o mostrar únicamente las novedades
-                            for item in contenido:
-                                # Opcional: Filtra por ítems con ID estrictamente superior al anterior
-                                if int(item.get("id", 0)) > nov['id_anterior']:
-                                    st.caption(f"{nov['seccion']}")
-                                    col1, col2 = st.columns([1, 4])
-                                    with col1:
-                                        st.markdown(f"**ID:** `{item.get('id', '-')}`")
-                                        st.caption(f"Exp: {item.get('cod_exp', '-')}")
-                                    with col2:
-                                        st.markdown(f"**{item.get('titulo', '-')}**")
-                                        st.text(f"Publicación: {item.get('fecha_pub', '-')} | Retirada: {item.get('fecha_ret', '-')}")
-                                    st.divider()
-                        else:
-                            st.write("No hay detalles desglosados disponibles para esta sección.")
-            elif "novedades" in st.session_state:
-                st.info("Cero novedades en todas las páginas rastreadas.")
+                    if contenido:
+                        # Filtrar o mostrar únicamente las novedades
+                        for item in contenido:
+                            # Opcional: Filtra por ítems con ID estrictamente superior al anterior
+                            if int(item.get("id", 0)) > nov['id_anterior']:
+                                st.caption(f"{nov['seccion']}")
+                                col1, col2 = st.columns([1, 4])
+                                with col1:
+                                    st.markdown(f"**ID:** `{item.get('id', '-')}`")
+                                    st.caption(f"Exp: {item.get('cod_exp', '-')}")
+                                with col2:
+                                    st.markdown(f"**{item.get('titulo', '-')}**")
+                                    st.text(f"Publicación: {item.get('fecha_pub', '-')} | Retirada: {item.get('fecha_ret', '-')}")
+                                st.divider()
+                    else:
+                        st.write("No hay detalles desglosados disponibles para esta sección.")
+        elif "novedades" in st.session_state:
+            st.info("Cero novedades en todas las páginas rastreadas.")
 # Vista rápida del historial guardado
 #st.divider()
 #st.subheader("📋 Registro de Últimos IDs Almacenados")
