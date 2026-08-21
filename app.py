@@ -41,28 +41,31 @@ tipos_seleccionados = st.sidebar.multiselect(
     "Filtrar por tipo a escanear:",
     options=tipos_disponibles,
     default=tipos_disponibles,
-    help="Selecciona uno o varios tipos (0 al 5) para limitar el escaneo."
+    help="Selecciona los tipos (0 al 5) que deseas incluir en el escaneo."
 )
 
 # Botón de escaneo
 if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
     if not tipos_seleccionados:
-        st.warning("⚠️ Debes seleccionar al menos un tipo en la barra lateral para iniciar el escaneo.")
+        st.warning("⚠️ Debes seleccionar al menos un tipo en la barra lateral.")
     else:
         session = requests.Session()
         novedades = []
         
-        # Filtrar ayuntamientos según los tipos seleccionados en el desplegable
+        # Filtrar ayuntamientos según los tipos seleccionados
         ayuntamientos_filtrados = [item for item in ayuntamientos if item.get("type") in tipos_seleccionados]
         
         if not ayuntamientos_filtrados:
-            st.info("No hay ayuntamientos configurados con el/los tipo(s) seleccionado(s).")
+            st.info("No se encontraron municipios con los tipos seleccionados.")
         else:
             progress_bar = st.progress(0)
             status_text = st.empty()
 
             REMPLAZOS = str.maketrans("áéíóúÁÉÍÓÚñÑ", "aeiouAEIOUnN")
-            ayuntamientos_filtrados = sorted(ayuntamientos_filtrados, key=lambda x: x["nombre"].translate(REMPLAZOS).lower())
+            ayuntamientos_filtrados = sorted(
+                ayuntamientos_filtrados, 
+                key=lambda x: x["nombre"].translate(REMPLAZOS).lower()
+            )
             
             for idx, item in enumerate(ayuntamientos_filtrados):
                 nombre = item["nombre"]
@@ -72,13 +75,11 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
                 
                 extractor = obtener_extractor(tipo)
                 if extractor:
-                    resultado_extractor = extractor(session, item)
+                    id_actual = extractor(session, item)
                     
-                    # Manejo flexible por si el extractor retorna int o tuple/list [resultados, max_id]
-                    if isinstance(resultado_extractor, (list, tuple)):
-                        id_actual = resultado_extractor[1]
-                    else:
-                        id_actual = resultado_extractor
+                    # Manejo flexible por si el extractor retorna un int o [resultados, id_maximo]
+                    if isinstance(id_actual, (list, tuple)):
+                        id_actual = id_actual[1]
 
                     if id_actual is not None:
                         id_anterior = historial.get(nombre, 0)
@@ -111,7 +112,8 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
                         else:
                             st.markdown(f"[🔗 Ver tablón de edictos]({nov['url']})")
             else:
-                st.info("Cero novedades en todas las páginas rastreadas.")# Vista rápida del historial guardado
+                st.info("Cero novedades en todas las páginas rastreadas.")
+# Vista rápida del historial guardado
 st.divider()
 st.subheader("📋 Registro de Últimos IDs Almacenados")
 if historial:
