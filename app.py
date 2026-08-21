@@ -61,12 +61,6 @@ tipos_seleccionados = st.sidebar.multiselect(
     help="Selecciona los tipos (0 al 5) que deseas incluir en el escaneo."
 )
 
-# Interruptor ON/OFF para desplegar/plegar todos los expanders
-st.session_state.desplegar_expanders = st.sidebar.toggle(
-    "Expandir todas las novedades", 
-    value=st.session_state.desplegar_expanders
-)
-
 # Botón de escaneo
 if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
     if not tipos_seleccionados:
