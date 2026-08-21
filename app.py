@@ -13,6 +13,9 @@ st.set_page_config(
     layout="wide"
 )
 
+if "desplegar_expanders" not in st.session_state:
+    st.session_state.desplegar_expanders = False
+
 # Carga de datos
 def cargar_json(ruta):
     if os.path.exists(ruta):
@@ -34,6 +37,12 @@ historial = cargar_json(FICHERO_HISTORIAL)
 
 st.sidebar.header("⚙️ Configuración")
 st.sidebar.info(f"Municipios configurados: **{len(ayuntamientos)}**")
+
+# Interruptor ON/OFF para desplegar/plegar todos los expanders
+st.session_state.desplegar_expanders = st.sidebar.toggle(
+    "Expandir todas las novedades", 
+    value=st.session_state.desplegar_expanders
+)
 
 # Botón de escaneo
 if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
@@ -79,7 +88,10 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
     if novedades:
         st.success(f"🔥 ¡Novedades detectadas en {len(novedades)} municipio(s)!")
         for nov in novedades:
-            with st.expander(f"📍 {nov['seccion']} (Nuevo ID: {nov['id_nuevo']})"):
+            with st.expander(
+                f"📍 {nov['seccion']} (Nuevo ID: {nov['id_nuevo']})",
+                expanded=st.session_state.desplegar_expanders
+            ):
                 st.write(f"**ID Anterior:** {nov['id_anterior']} ➔ **ID Nuevo:** {nov['id_nuevo']}")
                 if nov['tipo'] in (0,3):
                     st.markdown(f"[🔗 Ver tablón de edictos]({nov['referer']})")
