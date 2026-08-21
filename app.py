@@ -13,13 +13,6 @@ st.set_page_config(
     layout="wide"
 )
 
-# 1. Inicialización de variables persistentes en el estado
-if "novedades" not in st.session_state:
-    st.session_state.novedades = []
-
-if "estado_expanders" not in st.session_state:
-    st.session_state.estado_expanders = False
-
 # Carga de datos
 def cargar_json(ruta):
     if os.path.exists(ruta):
@@ -42,16 +35,6 @@ historial = cargar_json(FICHERO_HISTORIAL)
 st.sidebar.header("⚙️ Configuración")
 st.sidebar.info(f"Municipios configurados: **{len(ayuntamientos)}**")
 
-# Callback para cambiar el estado de apertura masiva
-def alternar_expanders():
-    st.session_state.estado_expanders = st.session_state.toggle_master
-# 2. Toggle en la columna izquierda / sidebar
-st.sidebar.toggle(
-    "Abrir / Cerrar todos", 
-    key="toggle_master", 
-    on_change=alternar_expanders
-)
-
 # Desplegable para seleccionar el tipo de edictos a escanear
 tipos_disponibles = [0, 1, 2, 3, 4, 5]
 tipos_seleccionados = st.sidebar.multiselect(
@@ -60,6 +43,9 @@ tipos_seleccionados = st.sidebar.multiselect(
     default=tipos_disponibles,
     help="Selecciona los tipos (0 al 5) que deseas incluir en el escaneo."
 )
+
+# Toggle de la barra lateral
+expandir_todos = st.sidebar.toggle("Abrir / Cerrar todos", value=False)
 
 # Botón de escaneo
 if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
@@ -135,14 +121,17 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
             guardar_historial(historial)
             status_text.text("✅ Escaneo finalizado.")
             # Guardamos las novedades en session_state para que NO desaparezcan al pulsar botones o toggles
-            st.session_state.novedades = novedades_temp
+            st.session_state["novedades"] = novedades_temp
             
             st.divider()
+
+            # Renderizado de Resultados
+            novedades = st.session_state.get("novedades", [])
             
             # Resultados
-            if st.session_state.novedades:
+            if novedades:
                 st.success(f"🔥 ¡Novedades detectadas en {len(st.session_state.novedades)} municipio(s)!")
-                for nov in st.session_state.novedades:
+                for nov in novedades:
                     # Determinación de la URL destino según el tipo
                     url_tablon = nov['referer'] if nov['tipo'] in (0, 3) else nov['url']
                     
@@ -152,7 +141,8 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
                     # Se asigna dinámicamente según el estado del toggle
                     with st.expander(
                         f"📍 {nov['seccion']} (Nuevo ID: {nov['id_nuevo']})", 
-                        expanded=st.session_state.estado_expanders
+                        expanded=st.session_state.estado_expanders,
+                        key=f"expander_{idx}_{expandir_todos}"
                     ):
                         st.caption(f"ID Anterior: `{nov['id_anterior']}` ➔ ID Nuevo: `{nov['id_nuevo']}`")
                         
@@ -175,7 +165,7 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
                                     st.divider()
                         else:
                             st.write("No hay detalles desglosados disponibles para esta sección.")
-            else:
+            elif "novedades" in st.session_state:
                 st.info("Cero novedades en todas las páginas rastreadas.")
 # Vista rápida del historial guardado
 #st.divider()
