@@ -107,8 +107,8 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
                                 "contenido": contenido
                             })
                             historial[nombre] = id_actual
-                        else:
-                            pass
+                    else:
+                        pass
 
                 progress_bar.progress((idx + 1) / len(ayuntamientos_filtrados))
             
