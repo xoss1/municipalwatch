@@ -70,6 +70,8 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
             for idx, item in enumerate(ayuntamientos_filtrados):
                 nombre = item["nombre"]
                 tipo = item["type"]
+                url = item["url]
+                referer = item["referer"]
                 
                 status_text.text(f"Escaneando: {nombre} (Tipo {tipo})...")
                 
@@ -92,7 +94,9 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
                                     "id": item["id"],
                                     "fecha_pub": item["fecha_publicacion"],
                                     "fecha_ret": item["fecha_retirada"],
-                                    "cod_ext": item["codigo_expediente"]
+                                    "cod_ext": item["codigo_expediente"],
+                                    "url": url,
+                                    "referer": referer
                                 })
                             historial[nombre] = id_actual
                 
