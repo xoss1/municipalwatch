@@ -88,17 +88,23 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
                     if id_actual is not None:
                         id_anterior = historial.get(nombre, 0)
                         if id_actual > id_anterior:
+                            contenido = []
                             for item in resultados:
-                                novedades.append({
+                                contenido.append({
                                     "titulo": item["titulo"],
                                     "id": item["id"],
                                     "fecha_pub": item["fecha_publicacion"],
                                     "fecha_ret": item["fecha_retirada"],
-                                    "cod_ext": item["codigo_expediente"],
+                                    "cod_ext": item["codigo_expediente"]
+                                })
+                                novedades.append({
+                                    "id_anterior": id_anterior,
+                                    "id_nuevo": id_actual,
                                     "url": url,
                                     "referer": referer,
                                     "tipo": tipo,
-                                    "seccion": nombre
+                                    "seccion": nombre,
+                                    "contenido": contenido
                                 })
                             historial[nombre] = id_actual
                 
@@ -123,7 +129,8 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
                         st.caption(f"ID Anterior: `{nov['id_anterior']}` ➔ ID Nuevo: `{nov['id_nuevo']}`")
                         
                         # Obtener la lista de items/bloques extraídos
-                        lista_items = nov.get("items", [])
+                        cont = nov["contenido"]
+                        lista_items = cont.get("items", [])
                         
                         if lista_items:
                             # Filtrar o mostrar únicamente las novedades
