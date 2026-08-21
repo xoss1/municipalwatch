@@ -67,6 +67,7 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
         st.warning("⚠️ Debes seleccionar al menos un tipo en la barra lateral.")
     else:
         session = requests.Session()
+        novedades_temp = []
         novedades = []
         
         # Filtrar ayuntamientos según los tipos seleccionados
