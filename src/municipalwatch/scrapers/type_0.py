@@ -25,36 +25,8 @@ def extract_type_0(session, item):
             return None
 
         ids_encontrados = re.findall(r"listaJS\[j\]\s*=\s*\['(\d+)'", script_tag.string)
-        # Patrón que localiza cada encabezado 'listaJS[...' y extrae exactamente los 5 campos requeridos
-        patron = re.compile(
-          r"listaJS\[[^\]]+\]\s*=\s*\[\s*'([^']*)'"                           # ID (Elemento 0)
-          r"[\s\S]*?\/\/\s*3\s*'([^']*)'"                                      # Título (Trae el elemento tras //3 -> Índice 4)
-          r"[\s\S]*?\/\/\s*5\s*'(\d{2}/\d{2}/\d{4}\s+\d{2}:\d{2})'"            # Fecha Pub (Trae tras //5 -> Índice 6)
-          r"[\s\S]*?\/\/\s*6\s*'(\d{2}/\d{2}/\d{4}\s+\d{2}:\d{2})'"            # Fecha Ret (Trae tras //6 -> Índice 7)
-          r"[\s\S]*?\/\/\s*10\s*'([^'\\]*(?:\\\/[^']*)*)'",
-          re.DOTALL
-        )
-    
-        resultados = []
-    
-        for match in patron.finditer(response.text):
-          # Decodificamos secuencias Unicode como '\u00F3' a caracteres reales ('ó')
-          titulo_raw = match.group(2)
-          titulo_clean = bytes(titulo_raw, 'utf-8').decode('unicode-escape')
-          
-          # Limpiamos los escapes de barra '\/' del expediente
-          expediente_clean = match.group(5).replace(r'\/', '/')
-          
-          bloque = {
-              "id": match.group(1),
-              "titulo": titulo_clean,
-              "fecha_publicacion": match.group(3),
-              "fecha_retirada": match.group(4),
-              "codigo_expediente": expediente_clean
-          }
-          resultados.append(bloque)
         if ids_encontrados:
-          return [resultados, max([int(i) for i in ids_encontrados])]
+            return max([int(i) for i in ids_encontrados])
 
     except Exception as e:
         print(f"   ❌ Error en extractor tipo 0 [{item['nombre']}]: {e}")
