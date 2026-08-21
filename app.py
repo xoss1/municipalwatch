@@ -75,22 +75,23 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
                 
                 extractor = obtener_extractor(tipo)
                 if extractor:
-                    id_actual = extractor(session, item)
+                    extracto = extractor(session, item)
                     
                     # Manejo flexible por si el extractor retorna un int o [resultados, id_maximo]
                     if isinstance(id_actual, (list, tuple)):
-                        id_actual = id_actual[1]
+                        id_actual = extracto[1]
+                        resultados = extracto[0]
+
 
                     if id_actual is not None:
                         id_anterior = historial.get(nombre, 0)
                         if id_actual > id_anterior:
                             novedades.append({
-                                "seccion": nombre,
-                                "id_nuevo": id_actual,
-                                "id_anterior": id_anterior,
-                                "url": item["url"],
-                                "referer": item["referer"],
-                                "tipo": item["type"]
+                                "titulo" = resultados["titulo"]
+                                "id" = resultados["id"]
+                                "fecha_pub" = resultados["fecha_publicacion"]
+                                "fecha_ret" = resultados["fecha_retirada"]
+                                "cod_ext" = resultados["codigo_expediente"]
                             })
                             historial[nombre] = id_actual
                 
@@ -105,12 +106,33 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
             if novedades:
                 st.success(f"🔥 ¡Novedades detectadas en {len(novedades)} municipio(s)!")
                 for nov in novedades:
-                    with st.expander(f"📍 {nov['seccion']} (Nuevo ID: {nov['id_nuevo']})"):
-                        st.write(f"**ID Anterior:** {nov['id_anterior']} ➔ **ID Nuevo:** {nov['id_nuevo']}")
-                        if nov['tipo'] in (0, 3):
-                            st.markdown(f"[🔗 Ver tablón de edictos]({nov['referer']})")
+                    # Determinación de la URL destino según el tipo
+                    url_tablon = nov['referer'] if nov['tipo'] in (0, 3) else nov['url']
+                    
+                    # Cabecera con Nombre y Enlace
+                    label_expander = f"📍 {nov['seccion']} | [🔗 ver tablón de edictos]({url_tablon})"
+                    
+                    with st.expander(label_expander):
+                        st.caption(f"ID Anterior: `{nov['id_anterior']}` ➔ ID Nuevo: `{nov['id_nuevo']}`")
+                        
+                        # Obtener la lista de items/bloques extraídos
+                        lista_items = nov.get("items", [])
+                        
+                        if lista_items:
+                            # Filtrar o mostrar únicamente las novedades
+                            for item in lista_items:
+                                # Opcional: Filtra por ítems con ID estrictamente superior al anterior
+                                if item.get("id", 0) > nov['id_anterior']:
+                                    col1, col2 = st.columns([1, 4])
+                                    with col1:
+                                        st.markdown(f"**ID:** `{item.get('id', '-')}`")
+                                        st.caption(f"Exp: {item.get('codigo_expediente', '-')}")
+                                    with col2:
+                                        st.markdown(f"**{item.get('titulo', '-')}**")
+                                        st.text(f"Publicación: {item.get('fecha_publicacion', '-')} | Retirada: {item.get('fecha_retirada', '-')}")
+                                    st.divider()
                         else:
-                            st.markdown(f"[🔗 Ver tablón de edictos]({nov['url']})")
+                            st.write("No hay detalles desglosados disponibles para esta sección.")
             else:
                 st.info("Cero novedades en todas las páginas rastreadas.")
 # Vista rápida del historial guardado
