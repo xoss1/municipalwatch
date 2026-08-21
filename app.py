@@ -130,10 +130,12 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
                         
                         # Obtener la lista de items/bloques extraídos
                         contenido = nov.get("contenido")
+                        print(contenido)
                         
                         if contenido:
                             # Filtrar o mostrar únicamente las novedades
                             for item in contenido:
+                                print(item)
                                 # Opcional: Filtra por ítems con ID estrictamente superior al anterior
                                 if item.get("id", 0) > nov['id_anterior']:
                                     col1, col2 = st.columns([1, 4])
