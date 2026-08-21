@@ -140,6 +140,7 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
                             for item in contenido:
                                 # Opcional: Filtra por ítems con ID estrictamente superior al anterior
                                 if int(item.get("id", 0)) > nov['id_anterior']:
+                                    st.caption(f"{nov['seccion']}")
                                     col1, col2 = st.columns([1, 4])
                                     with col1:
                                         st.markdown(f"**ID:** `{item.get('id', '-')}`")
