@@ -141,7 +141,7 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
                     # Se asigna dinámicamente según el estado del toggle
                     with st.expander(
                         f"📍 {nov['seccion']} (Nuevo ID: {nov['id_nuevo']})", 
-                        expanded=st.session_state.estado_expanders,
+                        expanded=expandir_todos,
                         key=f"expander_{idx}_{expandir_todos}"
                     ):
                         st.caption(f"ID Anterior: `{nov['id_anterior']}` ➔ ID Nuevo: `{nov['id_nuevo']}`")
