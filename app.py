@@ -97,7 +97,8 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
                                     "cod_ext": item["codigo_expediente"],
                                     "url": url,
                                     "referer": referer,
-                                    "tipo": tipo
+                                    "tipo": tipo,
+                                    "seccion": nombre
                                 })
                             historial[nombre] = id_actual
                 
