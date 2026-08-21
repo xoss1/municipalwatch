@@ -70,7 +70,7 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
             for idx, item in enumerate(ayuntamientos_filtrados):
                 nombre = item["nombre"]
                 tipo = item["type"]
-                url = item["url]
+                url = item["url"]
                 referer = item["referer"]
                 
                 status_text.text(f"Escaneando: {nombre} (Tipo {tipo})...")
