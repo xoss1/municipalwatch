@@ -167,13 +167,9 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
             else:
                 st.info("Cero novedades en todas las páginas rastreadas.")
 # Vista rápida del historial guardado
-st.divider()
-st.subheader("📋 Registro de Últimos IDs Almacenados")
-if historial:
-    st.json(historial)
-else:
-    st.write("Aún no hay historial registrado. Haz clic en 'Iniciar Escaneo'.")
-if historial:
-    st.json(historial)
-else:
-    st.write("Aún no hay historial registrado. Haz clic en 'Iniciar Escaneo'.")
+#st.divider()
+#st.subheader("📋 Registro de Últimos IDs Almacenados")
+#if historial:
+#    st.json(historial)
+#else:
+#    st.write("Aún no hay historial registrado. Haz clic en 'Iniciar Escaneo'.")
