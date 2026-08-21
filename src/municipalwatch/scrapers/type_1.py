@@ -39,12 +39,10 @@ def extract_type_1(session, item):
         for fila in filas:
             match_exp = re.search(r'class_folderCode[^>]*>.*?<span>([^<]+)</span>', fila, re.DOTALL)
             match_fecha = re.search(r'class_dateFrom[^>]*>.*?<span>([^<]+)</span>', fila, re.DOTALL)
-            match_titulo = re.search(r'class_description[^>]*>.*?<span>([^<]+)</span>', fila, re.DOTALL)
 
             if match_exp and match_fecha:
                 txt_exp = match_exp.group(1).strip()
                 txt_fecha = match_fecha.group(1).strip()
-                txt_titulo = match_titulo.group(1).strip() if match_titulo else "-"
 
                 # Extraer Fecha (DD/MM/AAAA -> AAAAMMDD)
                 m_fecha = re.search(r'(\d{2})/(\d{2})/(\d{4})', txt_fecha)
@@ -56,26 +54,22 @@ def extract_type_1(session, item):
                     fecha_int = int(f"{ano}{mes}{dia}")
                     num_exp = int(m_num.group(1)) if m_num else 0
                     
-                    # ID único numérico
-                    bloque_id = int(f"{fecha_int}{num_exp:05d}")
-                    ids_encontrados.append(bloque_id)
+                    # ID Incremental: AAAAMMDD + Nº Expediente a 5 dígitos (Ej: 2026080401995)
+                    ids_encontrados.append(int(f"{fecha_int}{num_exp:05d}"))
 
-                    # Estructuración del bloque según requerimiento
-                    bloque = {
-                        "id": bloque_id,
-                        "titulo": txt_titulo,
-                        "fecha_publicacion": txt_fecha,
-                        "fecha_retirada": "-",
-                        "codigo_expediente": txt_exp
-                    }
-                    resultados.append(bloque)
+        #st.write(f"📑 **[DEBUG] IDs Fecha+Expediente generados:** `{ids_encontrados[:3]}`...")
 
-        # Retornar tuple de [resultados, max_id]
+        # 2. Plan B: Si la tabla cambia de estructura, usará los UUIDs como respaldo
+        if not ids_encontrados and uuids:
+            #st.write("⚠️ **[DEBUG] Fallback a conteo por UUIDs**")
+            ids_encontrados.append(len(set(uuids)))
+
         if ids_encontrados:
-            return [resultados, max(ids_encontrados)]
-
-        # 2. Plan B: Respaldo en caso de que no haya coincidencias de tabla con id_expediente
+            id_maximo = max(ids_encontrados)
+            #st.success(f"✅ **[DEBUG] ID Máximo calculated para {item['nombre']}:** `{id_maximo}`")
+            return id_maximo
         else:
+            #st.warning(f"⚠️ **[DEBUG] No se pudo calcular ningún ID numérico para {item['nombre']}.**")
             pass
 
     except Exception as e:
