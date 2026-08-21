@@ -86,13 +86,14 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
                     if id_actual is not None:
                         id_anterior = historial.get(nombre, 0)
                         if id_actual > id_anterior:
-                            novedades.append({
-                                "titulo": resultados["titulo"],
-                                "id": resultados["id"],
-                                "fecha_pub": resultados["fecha_publicacion"],
-                                "fecha_ret": resultados["fecha_retirada"],
-                                "cod_ext": resultados["codigo_expediente"]
-                            })
+                            for item in resultados:
+                                novedades.append({
+                                    "titulo": item["titulo"],
+                                    "id": item["id"],
+                                    "fecha_pub": item["fecha_publicacion"],
+                                    "fecha_ret": item["fecha_retirada"],
+                                    "cod_ext": item["codigo_expediente"]
+                                })
                             historial[nombre] = id_actual
                 
                 progress_bar.progress((idx + 1) / len(ayuntamientos_filtrados))
