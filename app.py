@@ -88,7 +88,7 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
                         if id_actual > id_anterior:
                             novedades.append({
                                 "titulo": resultados["titulo"],
-                                "id": resultados["id"]
+                                "id": resultados["id"],
                                 "fecha_pub": resultados["fecha_publicacion"],
                                 "fecha_ret": resultados["fecha_retirada"],
                                 "cod_ext": resultados["codigo_expediente"]
