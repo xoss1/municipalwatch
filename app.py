@@ -83,7 +83,9 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
                     if isinstance(extracto, (list, tuple)):
                         id_actual = extracto[1]
                         resultados = extracto[0]
-
+                    else:
+                        id_actual = None
+                        resultados = False
 
                     if resultados and id_actual is not None:
                         id_anterior = historial.get(nombre, 0)
@@ -95,7 +97,7 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
                                     "id": item["id"],
                                     "fecha_pub": item["fecha_publicacion"],
                                     "fecha_ret": item["fecha_retirada"],
-                                    "cod_ext": item["codigo_expediente"]
+                                    "cod_exp": item["codigo_expediente"]
                                 })
                             novedades.append({
                                 "id_anterior": id_anterior,
