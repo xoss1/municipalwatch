@@ -97,15 +97,15 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
                                     "fecha_ret": item["fecha_retirada"],
                                     "cod_ext": item["codigo_expediente"]
                                 })
-                                novedades.append({
-                                    "id_anterior": id_anterior,
-                                    "id_nuevo": id_actual,
-                                    "url": url,
-                                    "referer": referer,
-                                    "tipo": tipo,
-                                    "seccion": nombre,
-                                    "contenido": contenido
-                                })
+                            novedades.append({
+                                "id_anterior": id_anterior,
+                                "id_nuevo": id_actual,
+                                "url": url,
+                                "referer": referer,
+                                "tipo": tipo,
+                                "seccion": nombre,
+                                "contenido": contenido
+                            })
                             historial[nombre] = id_actual
                 
                 progress_bar.progress((idx + 1) / len(ayuntamientos_filtrados))
