@@ -129,12 +129,11 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
                         st.caption(f"ID Anterior: `{nov['id_anterior']}` ➔ ID Nuevo: `{nov['id_nuevo']}`")
                         
                         # Obtener la lista de items/bloques extraídos
-                        cont = nov.get("contenido")
-                        lista_items = cont.get("items", [])
+                        contenido = nov.get("contenido")
                         
-                        if lista_items:
+                        if contenido:
                             # Filtrar o mostrar únicamente las novedades
-                            for item in lista_items:
+                            for item in contenido:
                                 # Opcional: Filtra por ítems con ID estrictamente superior al anterior
                                 if item.get("id", 0) > nov['id_anterior']:
                                     col1, col2 = st.columns([1, 4])
