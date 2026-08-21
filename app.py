@@ -141,9 +141,9 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
             st.divider()
             
             # Resultados
-            if novedades:
+            if st.session_state.novedades:
                 st.success(f"🔥 ¡Novedades detectadas en {len(st.session_state.novedades)} municipio(s)!")
-                for nov in novedades:
+                for nov in st.session_state.novedades:
                     # Determinación de la URL destino según el tipo
                     url_tablon = nov['referer'] if nov['tipo'] in (0, 3) else nov['url']
                     
@@ -153,7 +153,7 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
                     # Se asigna dinámicamente según el estado del toggle
                     with st.expander(
                         f"📍 {nov['seccion']} (Nuevo ID: {nov['id_nuevo']})", 
-                        expanded=st.session_state.desplegar_expanders
+                        expanded=st.session_state.estado_expanders
                     ):
                         st.caption(f"ID Anterior: `{nov['id_anterior']}` ➔ ID Nuevo: `{nov['id_nuevo']}`")
                         
