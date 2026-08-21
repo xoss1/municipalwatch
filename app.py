@@ -68,7 +68,6 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
     else:
         session = requests.Session()
         novedades_temp = []
-        novedades = []
         
         # Filtrar ayuntamientos según los tipos seleccionados
         ayuntamientos_filtrados = [item for item in ayuntamientos if item.get("type") in tipos_seleccionados]
@@ -118,7 +117,7 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
                                     "fecha_ret": item["fecha_retirada"],
                                     "cod_exp": item["codigo_expediente"]
                                 })
-                            novedades.append({
+                            novedades_temp.append({
                                 "id_anterior": id_anterior,
                                 "id_nuevo": id_actual,
                                 "url": url,
