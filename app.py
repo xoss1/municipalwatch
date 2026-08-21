@@ -13,8 +13,12 @@ st.set_page_config(
     layout="wide"
 )
 
-if "desplegar_expanders" not in st.session_state:
-    st.session_state.desplegar_expanders = False
+# 1. Inicialización de variables persistentes en el estado
+if "novedades" not in st.session_state:
+    st.session_state.novedades = []
+
+if "estado_expanders" not in st.session_state:
+    st.session_state.estado_expanders = False
 
 # Carga de datos
 def cargar_json(ruta):
@@ -37,6 +41,16 @@ historial = cargar_json(FICHERO_HISTORIAL)
 
 st.sidebar.header("⚙️ Configuración")
 st.sidebar.info(f"Municipios configurados: **{len(ayuntamientos)}**")
+
+# Callback para cambiar el estado de apertura masiva
+def alternar_expanders():
+    st.session_state.estado_expanders = st.session_state.toggle_master
+# 2. Toggle en la columna izquierda / sidebar
+st.sidebar.toggle(
+    "Abrir / Cerrar todos", 
+    key="toggle_master", 
+    on_change=alternar_expanders
+)
 
 # Desplegable para seleccionar el tipo de edictos a escanear
 tipos_disponibles = [0, 1, 2, 3, 4, 5]
@@ -69,6 +83,7 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
         else:
             progress_bar = st.progress(0)
             status_text = st.empty()
+            
 
             REMPLAZOS = str.maketrans("áéíóúÁÉÍÓÚñÑ", "aeiouAEIOUnN")
             ayuntamientos_filtrados = sorted(
@@ -125,12 +140,14 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
             
             guardar_historial(historial)
             status_text.text("✅ Escaneo finalizado.")
+            # Guardamos las novedades en session_state para que NO desaparezcan al pulsar botones o toggles
+            st.session_state.novedades = novedades_temp
             
             st.divider()
             
             # Resultados
             if novedades:
-                st.success(f"🔥 ¡Novedades detectadas en {len(novedades)} municipio(s)!")
+                st.success(f"🔥 ¡Novedades detectadas en {len(st.session_state.novedades)} municipio(s)!")
                 for nov in novedades:
                     # Determinación de la URL destino según el tipo
                     url_tablon = nov['referer'] if nov['tipo'] in (0, 3) else nov['url']
