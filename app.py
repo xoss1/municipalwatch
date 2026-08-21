@@ -129,7 +129,7 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
                         st.caption(f"ID Anterior: `{nov['id_anterior']}` ➔ ID Nuevo: `{nov['id_nuevo']}`")
                         
                         # Obtener la lista de items/bloques extraídos
-                        cont = nov["contenido"]
+                        cont = nov.get("contenido")
                         lista_items = cont.get("items", [])
                         
                         if lista_items:
