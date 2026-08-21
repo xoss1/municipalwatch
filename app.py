@@ -78,7 +78,7 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
                     extracto = extractor(session, item)
                     
                     # Manejo flexible por si el extractor retorna un int o [resultados, id_maximo]
-                    if isinstance(id_actual, (list, tuple)):
+                    if isinstance(extracto, (list, tuple)):
                         id_actual = extracto[1]
                         resultados = extracto[0]
 
