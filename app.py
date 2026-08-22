@@ -32,31 +32,48 @@ def guardar_historial(historial):
         json.dump(historial, f, indent=4, ensure_ascii=False)
 
 def fecha_en_rango(fecha_str, rango):
-    # Si la opción elegida es "Todas las fechas", mostramos todo directamente
+    """
+    Comprueba si una fecha en texto está dentro del rango seleccionado.
+    Convierte casi cualquier formato de fecha estándar.
+    """
     if rango is None:
         return True
         
-    if not fecha_str or fecha_str in ["N/A", "-"]:
-        return True
+    if not fecha_str or str(fecha_str).strip() in ["N/A", "-", "None", ""]:
+        return False  # Si no hay fecha válida, no entra en el rango de fechas específicas
 
     fecha_inicio, fecha_fin = rango
-
-    # Parsear los formatos de fecha más habituales
     fecha_obj = None
-    for fmt in ("%d/%m/%Y", "%Y-%m-%d", "%d-%m-%Y"):
-        try:
-            fecha_obj = dt.strptime(fecha_str.strip(), fmt).date()
-            break
-        except ValueError:
-            continue
+    
+    # 1. Limpiar espacios extra
+    cadena = str(fecha_str).strip()
+    
+    # 2. Extraer solo la parte de la fecha si viene con hora (ej: "22/08/2026 11:30" -> "22/08/2026")
+    # Busca patrones tipo DD/MM/YYYY o YYYY-MM-DD
+    match_dd_mm_yyyy = re.search(r'(\d{1,2})[/\-](\d{1,2})[/\-](\d{4})', cadena)
+    match_yyyy_mm_dd = re.search(r'(\d{4})[/\-](\d{1,2})[/\-](\d{1,2})', cadena)
+
+    try:
+        if match_dd_mm_yyyy:
+            d, m, y = match_dd_mm_yyyy.groups()
+            fecha_obj = dt(int(y), int(m), int(d)).date()
+        elif match_yyyy_mm_dd:
+            y, m, d = match_yyyy_mm_dd.groups()
+            fecha_obj = dt(int(y), int(m), int(d)).date()
+        else:
+            # Fallback a formatos estándar directos
+            for fmt in ("%d/%m/%Y", "%Y-%m-%d", "%d-%m-%Y", "%d/%m/%y"):
+                try:
+                    fecha_obj = dt.strptime(cadena, fmt).date()
+                    break
+                except ValueError:
+                    continue
+    except Exception:
+        return False
 
     if fecha_obj is None:
-        try:
-            # Por si viene con hora (ej: "01/02/2026 10:30")
-            fecha_obj = dt.strptime(fecha_str.split()[0], "%d/%m/%Y").date()
-        except Exception:
-            return True # Si no se logra interpretar, lo muestra por seguridad
-            
+        return False
+
     return fecha_inicio <= fecha_obj <= fecha_fin
 
 # Interfaz Header
@@ -218,37 +235,41 @@ if novedades:
         st.markdown(f"**PROVINCIA: {prov}**")
         novedades_provincia = [nov for nov in novedades if nov.get("provincia") == prov]
         for nov in novedades_provincia:
-            # Determinación de la URL destino según el tipo
-            url_tablon = nov['referer'] if nov['tipo'] in (0, 3) else nov['url']
+            # Obtener la lista de items/bloques extraídos
+            contenido = nov.get("contenido")
             
-            # Cabecera con Nombre y Enlace
-            label_expander = f"📍 {nov['seccion']} | [🔗 ver tablón de edictos]({url_tablon})"
-            
-            # Se asigna dinámicamente según el estado del toggle
-            with st.expander(
-                label_expander, 
-                expanded=expandir_todos,
-                key=f"exp_{nov['seccion']}_{nov['id_nuevo']}_{expandir_todos}"
-            ):
-                st.caption(f"ID Anterior: `{nov['id_anterior']}` ➔ ID Nuevo: `{nov['id_nuevo']}`")
-                
-                # Obtener la lista de items/bloques extraídos
-                contenido = nov.get("contenido")
-                
-                if contenido:
-                    # Filtrar o mostrar únicamente las novedades
-                    for item in contenido:
-                        # Opcional: Filtra por ítems con ID estrictamente superior al anterior
-                        if fecha_en_rango(item.get("f_pub"), rango_fechas):
-                            st.caption(f"{nov['seccion']}")
-                            col1, col2 = st.columns([1, 4])
-                            with col1:
-                                st.markdown(f"**ID:** `{item.get('id', '-')}`")
-                                st.caption(f"Exp: {item.get('cod_exp', '-')}")
-                            with col2:
-                                st.markdown(f"**{item.get('titulo', '-')}**")
-                                st.text(f"Publicación: {item.get('fecha_pub', '-')} | Retirada: {item.get('fecha_ret', '-')}")
-                            st.divider()
+            if contenido:
+                # Filtrar o mostrar únicamente las novedades
+                novedades_visibles = []
+                fecha_pub = item.get("f_pub")
+                for item in contenido:
+                    # Opcional: Filtra por ítems con ID estrictamente superior al anterior
+                    if fecha_en_rango(fecha_pub, rango_fechas):
+                        novedades_visibles.append((item, f_pub))
+
+                if novedades_visibles:
+                    # Determinación de la URL destino según el tipo
+                    url_tablon = nov['referer'] if nov['tipo'] in (0, 3) else nov['url']
+                    
+                    # Cabecera con Nombre y Enlace
+                    label_expander = f"📍 {nov['seccion']} | [🔗 ver tablón de edictos]({url_tablon})"
+                    
+                    # Se asigna dinámicamente según el estado del toggle
+                    with st.expander(
+                        label_expander, 
+                        expanded=expandir_todos,
+                        key=f"exp_{nov['seccion']}_{nov['id_nuevo']}_{expandir_todos}"
+                    ):
+                        st.caption(f"ID Anterior: `{nov['id_anterior']}` ➔ ID Nuevo: `{nov['id_nuevo']}`")
+                                    st.caption(f"{nov['seccion']}")
+                                    col1, col2 = st.columns([1, 4])
+                                    with col1:
+                                        st.markdown(f"**ID:** `{item.get('id', '-')}`")
+                                        st.caption(f"Exp: {item.get('cod_exp', '-')}")
+                                    with col2:
+                                        st.markdown(f"**{item.get('titulo', '-')}**")
+                                        st.text(f"Publicación: {item.get('fecha_pub', '-')} | Retirada: {item.get('fecha_ret', '-')}")
+                                    st.divider()
                 else:
                     st.write("No hay detalles desglosados disponibles para esta sección.")
 elif "novedades" in st.session_state:
