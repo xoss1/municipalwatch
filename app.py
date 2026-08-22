@@ -9,11 +9,6 @@ from src.municipalwatch.scrapers import obtener_extractor
 FICHERO_AYUNTAMIENTOS = "ayuntamientos.json"
 FICHERO_HISTORIAL = "historial_ids.json"
 
-hoy = datetime.date.today()
-ayer = hoy - datetime.timedelta(days=1)
-hace_7_dias = hoy - datetime.timedelta(days=7)
-hace_30_dias = hoy - datetime.timedelta(days=30)
-
 st.set_page_config(
     page_title="MunicipalWatch",
     page_icon="📡",
@@ -241,8 +236,8 @@ if novedades:
             if contenido:
                 # Filtrar o mostrar únicamente las novedades
                 novedades_visibles = []
-                fecha_pub = item.get("f_pub")
                 for item in contenido:
+                    fecha_pub = item.get("f_pub")
                     # Opcional: Filtra por ítems con ID estrictamente superior al anterior
                     if fecha_en_rango(fecha_pub, rango_fechas):
                         novedades_visibles.append((item, f_pub))
