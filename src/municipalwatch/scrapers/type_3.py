@@ -90,21 +90,21 @@ def extract_type_3(session, item):
             session.verify = False
             session_aa = session.get(url, impersonate="chrome", proxies=proxies, verify=False)
             time.sleep(1)
-            st.write(f"🔍 **[DEBUG] Estatus de sesion GET {session_aa.status_code}:** `{url}`")
-            st.write(f"🔍 **[DEBUG] Escaneando {nombre}:** `{url}`")
+            #st.write(f"🔍 **[DEBUG] Estatus de sesion GET {session_aa.status_code}:** `{url}`")
+            #st.write(f"🔍 **[DEBUG] Escaneando {nombre}:** `{url}`")
 
             if esMazarron or esAlhama:
                 response = requests.get(item["referer"], proxies=proxies, verify=False)
             else:
                 response = requests.post(url, proxies=proxies, data=payload, verify=False)
-            st.write(f"👉 **[DEBUG] Código HTTP respuesta:** `{response.status_code}`")
+            #st.write(f"👉 **[DEBUG] Código HTTP respuesta:** `{response.status_code}`")
     
             if response.status_code != 200:
                 st.error(f"❌ La web devolvió un estado no válido: {response.status_code}")
                 return None
     
             html_text = response.text
-            st.write(f"📄 **[DEBUG] Longitud del HTML recibido:** `{len(html_text)}` caracteres")
+            #st.write(f"📄 **[DEBUG] Longitud del HTML recibido:** `{len(html_text)}` caracteres")
     
             ids_encontrados = []
             resultados = []
@@ -139,7 +139,7 @@ def extract_type_3(session, item):
                     }
                     resultados.append(bloque)
 
-            st.write(f"📄 **[DEBUG] id encontrados:** '{ids_encontrados}'")
+            #st.write(f"📄 **[DEBUG] id encontrados:** '{ids_encontrados}'")
             if ids_encontrados and resultados:
                 return [resultados, max([int(i) for i in ids_encontrados])]
         except Exception as e:
