@@ -121,7 +121,7 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
                                 "referer": referer,
                                 "tipo": tipo,
                                 "seccion": nombre,
-                                "provincia": provincia
+                                "provincia": provincia,
                                 "contenido": contenido
                             })
                             historial[nombre] = id_actual
