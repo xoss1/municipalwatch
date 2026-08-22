@@ -4,6 +4,7 @@ import os
 import datetime
 from datetime import datetime as dt
 import requests
+import re
 from src.municipalwatch.scrapers import obtener_extractor
 
 FICHERO_AYUNTAMIENTOS = "ayuntamientos.json"
