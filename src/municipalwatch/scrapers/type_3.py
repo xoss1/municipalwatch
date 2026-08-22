@@ -2,6 +2,7 @@ from curl_cffi import requests
 import re
 import time
 import streamlit as st
+import json
 
 def extract_type_3(session, item):
     """Extractor para plataformas Tipo 3 ("Carpeta Ciudadana") con depuración en tiempo real."""
