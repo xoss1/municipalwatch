@@ -44,6 +44,14 @@ tipos_seleccionados = st.sidebar.multiselect(
     help="Selecciona los tipos (0 al 5) que deseas incluir en el escaneo."
 )
 
+provincias_disponibles = ["MURCIA", "ALICANTE"]
+provincias_seleccionadas = st.sidebar.multiselect(
+    "Filtrar por provincia a escanear:",
+    options=provincias_disponibles,
+    default=provincias_disponibles,
+    help="Selecciona la provincia que deseas incluir en el escaneo."
+)
+
 # Toggle de la barra lateral
 expandir_todos = st.sidebar.toggle("Abrir / Cerrar todos", value=False)
 
@@ -51,12 +59,14 @@ expandir_todos = st.sidebar.toggle("Abrir / Cerrar todos", value=False)
 if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
     if not tipos_seleccionados:
         st.warning("⚠️ Debes seleccionar al menos un tipo en la barra lateral.")
+    elif not provincias_seleccionadas:
+        st.warning("⚠️ Debes seleccionar al menos una provincia en la barra lateral.")
     else:
         session = requests.Session()
         novedades_temp = []
         
         # Filtrar ayuntamientos según los tipos seleccionados
-        ayuntamientos_filtrados = [item for item in ayuntamientos if item.get("type") in tipos_seleccionados]
+        ayuntamientos_filtrados = [item for item in ayuntamientos if item.get("type") in tipos_seleccionados and item.get("provincia") in provincias_seleccionadas]
         
         if not ayuntamientos_filtrados:
             st.info("No se encontraron municipios con los tipos seleccionados.")
@@ -76,6 +86,7 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
                 tipo = item["type"]
                 url = item["url"]
                 referer = item["referer"]
+                provincia = item["provincia"]
                 
                 status_text.text(f"Escaneando: {nombre} (Tipo {tipo})...")
                 
@@ -95,13 +106,13 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
                         id_anterior = historial.get(nombre, 0)
                         if id_actual > id_anterior:
                             contenido = []
-                            for item in resultados:
+                            for res in resultados:
                                 contenido.append({
-                                    "titulo": item["titulo"],
-                                    "id": item["id"],
-                                    "fecha_pub": item["fecha_publicacion"],
-                                    "fecha_ret": item["fecha_retirada"],
-                                    "cod_exp": item["codigo_expediente"]
+                                    "titulo": res["titulo"],
+                                    "id": res["id"],
+                                    "fecha_pub": res["fecha_publicacion"],
+                                    "fecha_ret": res["fecha_retirada"],
+                                    "cod_exp": res["codigo_expediente"]
                                 })
                             novedades_temp.append({
                                 "id_anterior": id_anterior,
@@ -110,6 +121,7 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
                                 "referer": referer,
                                 "tipo": tipo,
                                 "seccion": nombre,
+                                "provincia": provincia
                                 "contenido": contenido
                             })
                             historial[nombre] = id_actual
@@ -131,38 +143,40 @@ novedades = st.session_state.get("novedades", [])
 # Resultados
 if novedades:
     st.success(f"🔥 ¡Novedades detectadas en {len(st.session_state.novedades)} municipio(s)!")
-    for nov in novedades:
-        # Determinación de la URL destino según el tipo
-        url_tablon = nov['referer'] if nov['tipo'] in (0, 3) else nov['url']
-        
-        # Cabecera con Nombre y Enlace
-        label_expander = f"📍 {nov['seccion']} | [🔗 ver tablón de edictos]({url_tablon})"
-        
-        # Se asigna dinámicamente según el estado del toggle
-        with st.expander(
-            label_expander, 
-            expanded=expandir_todos,
-            key=f"expander_{nov['id_nuevo']}_{expandir_todos}"
-        ):
-            st.caption(f"ID Anterior: `{nov['id_anterior']}` ➔ ID Nuevo: `{nov['id_nuevo']}`")
+    for prov in provincias_seleccionadas:
+        st.markdown(f"**PROVINCIA: {prov}**")
+        for nov in novedades if nov.get("provincia") == prov:
+            # Determinación de la URL destino según el tipo
+            url_tablon = nov['referer'] if nov['tipo'] in (0, 3) else nov['url']
             
-            # Obtener la lista de items/bloques extraídos
-            contenido = nov.get("contenido")
+            # Cabecera con Nombre y Enlace
+            label_expander = f"📍 {nov['seccion']} | [🔗 ver tablón de edictos]({url_tablon})"
             
-            if contenido:
-                # Filtrar o mostrar únicamente las novedades
-                for item in contenido:
-                    # Opcional: Filtra por ítems con ID estrictamente superior al anterior
-                    if int(item.get("id", 0)) > nov['id_anterior']:
-                        st.caption(f"{nov['seccion']}")
-                        col1, col2 = st.columns([1, 4])
-                        with col1:
-                            st.markdown(f"**ID:** `{item.get('id', '-')}`")
-                            st.caption(f"Exp: {item.get('cod_exp', '-')}")
-                        with col2:
-                            st.markdown(f"**{item.get('titulo', '-')}**")
-                            st.text(f"Publicación: {item.get('fecha_pub', '-')} | Retirada: {item.get('fecha_ret', '-')}")
-                        st.divider()
+            # Se asigna dinámicamente según el estado del toggle
+            with st.expander(
+                label_expander, 
+                expanded=expandir_todos,
+                key=f"expander_{nov['id_nuevo']}_{expandir_todos}"
+            ):
+                st.caption(f"ID Anterior: `{nov['id_anterior']}` ➔ ID Nuevo: `{nov['id_nuevo']}`")
+                
+                # Obtener la lista de items/bloques extraídos
+                contenido = nov.get("contenido")
+                
+                if contenido:
+                    # Filtrar o mostrar únicamente las novedades
+                    for item in contenido:
+                        # Opcional: Filtra por ítems con ID estrictamente superior al anterior
+                        if int(item.get("id", 0)) > nov['id_anterior']:
+                            st.caption(f"{nov['seccion']}")
+                            col1, col2 = st.columns([1, 4])
+                            with col1:
+                                st.markdown(f"**ID:** `{item.get('id', '-')}`")
+                                st.caption(f"Exp: {item.get('cod_exp', '-')}")
+                            with col2:
+                                st.markdown(f"**{item.get('titulo', '-')}**")
+                                st.text(f"Publicación: {item.get('fecha_pub', '-')} | Retirada: {item.get('fecha_ret', '-')}")
+                            st.divider()
             else:
                 st.write("No hay detalles desglosados disponibles para esta sección.")
 elif "novedades" in st.session_state:
