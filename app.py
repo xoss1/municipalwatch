@@ -145,7 +145,8 @@ if novedades:
     st.success(f"🔥 ¡Novedades detectadas en {len(st.session_state.novedades)} municipio(s)!")
     for prov in provincias_seleccionadas:
         st.markdown(f"**PROVINCIA: {prov}**")
-        for nov in novedades if nov.get("provincia") == prov:
+        novedades_provincia = [nov for nov in novedades if nov.get("provincia") == prov]
+        for nov in novedades_provincia:
             # Determinación de la URL destino según el tipo
             url_tablon = nov['referer'] if nov['tipo'] in (0, 3) else nov['url']
             
