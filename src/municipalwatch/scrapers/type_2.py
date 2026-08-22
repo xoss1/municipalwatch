@@ -71,7 +71,7 @@ def extract_type_2(session, item):
         # Crear el bloque del edicto
         bloque = {
             "id": anuncio_id,
-            "cod_exp": "N/A",
+            "codigo_expediente": "N/A",
             "titulo": titulo,
             "fecha_publicacion": fecha_pub,
             "fecha_retirada": fecha_ret
