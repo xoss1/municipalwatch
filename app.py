@@ -261,15 +261,15 @@ if novedades:
                         key=f"exp_{nov['seccion']}_{nov['id_nuevo']}_{expandir_todos}"
                     ):
                         st.caption(f"ID Anterior: `{nov['id_anterior']}` ➔ ID Nuevo: `{nov['id_nuevo']}`")
-                                    st.caption(f"{nov['seccion']}")
-                                    col1, col2 = st.columns([1, 4])
-                                    with col1:
-                                        st.markdown(f"**ID:** `{item.get('id', '-')}`")
-                                        st.caption(f"Exp: {item.get('cod_exp', '-')}")
-                                    with col2:
-                                        st.markdown(f"**{item.get('titulo', '-')}**")
-                                        st.text(f"Publicación: {item.get('fecha_pub', '-')} | Retirada: {item.get('fecha_ret', '-')}")
-                                    st.divider()
+                        st.caption(f"{nov['seccion']}")
+                        col1, col2 = st.columns([1, 4])
+                        with col1:
+                            st.markdown(f"**ID:** `{item.get('id', '-')}`")
+                            st.caption(f"Exp: {item.get('cod_exp', '-')}")
+                        with col2:
+                            st.markdown(f"**{item.get('titulo', '-')}**")
+                            st.text(f"Publicación: {item.get('fecha_pub', '-')} | Retirada: {item.get('fecha_ret', '-')}")
+                        st.divider()
                 else:
                     st.write("No hay detalles desglosados disponibles para esta sección.")
 elif "novedades" in st.session_state:
