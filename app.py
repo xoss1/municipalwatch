@@ -245,6 +245,8 @@ if novedades:
 
                 if novedades_visibles:
                     for nov_v in novedades_visibles:
+                        item = nov_v[0]
+                        fecha_pub = nov_v [1]
                         # Determinación de la URL destino según el tipo
                         url_tablon = nov['referer'] if nov['tipo'] in (0, 3) else nov['url']
                         
@@ -261,11 +263,11 @@ if novedades:
                             st.caption(f"{nov['seccion']}")
                             col1, col2 = st.columns([1, 4])
                             with col1:
-                                st.markdown(f"**ID:** `{nov_v.get('id', '-')}`")
-                                st.caption(f"Exp: {nov_v.get('cod_exp', '-')}")
+                                st.markdown(f"**ID:** `{item.get('id', '-')}`")
+                                st.caption(f"Exp: {item.get('cod_exp', '-')}")
                             with col2:
-                                st.markdown(f"**{nov_v.get('titulo', '-')}**")
-                                st.text(f"Publicación: {nov_v.get('fecha_pub', '-')} | Retirada: {nov_v.get('fecha_ret', '-')}")
+                                st.markdown(f"**{item.get('titulo', '-')}**")
+                                st.text(f"Publicación: {item.get('fecha_pub', '-')} | Retirada: {item.get('fecha_ret', '-')}")
                             st.divider()
                 else:
                     st.write("No hay detalles desglosados disponibles para esta sección.")
