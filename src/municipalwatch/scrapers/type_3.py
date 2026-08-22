@@ -106,22 +106,40 @@ def extract_type_3(session, item):
             #st.write(f"📄 **[DEBUG] Longitud del HTML recibido:** `{len(html_text)}` caracteres")
     
             ids_encontrados = []
-    
-            pattern = r'\{\s*"dboid"\s*:\s*"(?P<dboid>\d+)".*?"pubDateIni"\s*:\s*\{\s*(?:[^{}]*?"year"\s*:\s*(?P<year>\d+))(?:[^{}]*?"month"\s*:\s*(?P<month>\d+))(?:[^{}]*?"day"\s*:\s*(?P<day>\d+))(?:[^{}]*?"hour"\s*:\s*(?P<hour>\d+))(?:[^{}]*?"minute"\s*:\s*(?P<minute>\d+))(?:[^{}]*?"second"\s*:\s*(?P<second>\d+))'
-            regex = re.compile(pattern, re.DOTALL)
-    
-            for match in regex.finditer(html_text):
-                d = match.groupdict()
-        
-                fecha_str = f"{int(d['year']):04d}{int(d['month']):02d}{int(d['day']):02d}{int(d['hour']):02d}{int(d['minute']):02d}{int(d['second']):02d}"
-                bloque_unico = d['dboid'][8:-5]
-        
-                id_sintetico = int(f"{fecha_str}{bloque_unico}")
-                ids_encontrados.append(id_sintetico)
-                
+            resultados = []
+            match = re.search(r'var\s+\w+\s*=\s*(\[\s*\{.*?\}\s*\]);', text, re.DOTALL)
+
+            if match:
+                data = json.loads(match.group(1))
+            
+                for item in data:
+                    dboid = item.get("dboid")
+                    descriptionProc = item.get("descriptionProc")
+                    externString = item.get("externString")
+            
+                    pubDateIni = item.get("pubDateIni", {})
+                    pubDateFin = item.get("pubDateFin")
+            
+                    pubDateFin = pubDateFin if pubDateFin else "N/A"
+
+                    fecha_str = f"{int(pubDateIni['year']):04d}{int(pubDateIni['month']):02d}{int(pubDateIni['day']):02d}{int(pubDateIni['hour']):02d}{int(pubDateIni['minute']):02d}{int(pubDateIni['second']):02d}"
+                    bloque_unico = dboid[8:-5]
+                    id_sintetico = int(f"{fecha_str}{bloque_unico}")
+                    ids_encontrados.append(id_sintetico)
+                    fecha_pub: f"{int(pubDateIni['day']):02d}/{int(pubDateIni['month']):02d}/{int(pubDateIni['year']):04d}"
+                    fecha_ret: f"{int(pubDateFin['day']):02d}/{int(pubDateFin['month']):02d}/{int(pubDateFin['year']):04d}"
+                    bloque = {
+                        "id": id_sintetico,
+                        "fecha_publicacion": ,
+                        "fecha_retirada": ,
+                        "titulo": descriptionProc,
+                        "codigo_expediente": externString
+                    }
+                    resultados.append(bloque)
+
             #st.write(f"📄 **[DEBUG] id encontrados:** '{ids_encontrados}'")
-            if ids_encontrados:
-                return max([int(i) for i in ids_encontrados])
+            if ids_encontrados and resultados:
+                return [resultados, max([int(i) for i in ids_encontrados])]
         except Exception as e:
             #st.error(f"💥 **[DEBUG] Excepción capturada en {item['nombre']}:** `{e}`")
             pass
