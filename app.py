@@ -237,10 +237,10 @@ if novedades:
                 # Filtrar o mostrar únicamente las novedades
                 novedades_visibles = []
                 for item in contenido:
-                    fecha_pub = item.get("f_pub")
+                    fecha_pub = item.get("fecha_pub")
                     # Opcional: Filtra por ítems con ID estrictamente superior al anterior
                     if fecha_en_rango(fecha_pub, rango_fechas):
-                        novedades_visibles.append((item, f_pub))
+                        novedades_visibles.append((item, fecha_pub))
 
                 if novedades_visibles:
                     # Determinación de la URL destino según el tipo
