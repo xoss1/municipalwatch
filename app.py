@@ -269,7 +269,9 @@ if novedades:
                                 st.text(f"Publicación: {fecha_pub or '-'} | Retirada: {item.get('fecha_ret', '-')}")
                             st.divider()
                 else:
-                    st.write("No hay detalles desglosados disponibles para esta sección.")
+                    #st.write("No hay detalles desglosados disponibles para esta sección.")
+                    pass
+                    
 elif "novedades" in st.session_state:
     st.info("Cero novedades en todas las páginas rastreadas.")
 # Vista rápida del historial guardado
