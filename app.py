@@ -157,7 +157,7 @@ if novedades:
             with st.expander(
                 label_expander, 
                 expanded=expandir_todos,
-                key=f"expander_{nov['id_nuevo']}_{expandir_todos}"
+                key=f"exp_{nov['seccion']}_{nov['id_nuevo']}_{expandir_todos}"
             ):
                 st.caption(f"ID Anterior: `{nov['id_anterior']}` ➔ ID Nuevo: `{nov['id_nuevo']}`")
                 
