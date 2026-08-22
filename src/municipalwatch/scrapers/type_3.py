@@ -28,7 +28,7 @@ def extract_type_3(session, item):
         eventscreenId = "PTS_TABLON"
         pagecode = "PTS_TABLON"
         hfc = "HEADER_PTS#FOOTER_PTS"
-    elif nombre == "Torre-Pacheco":
+    elif nombre in ("Torre-Pacheco", "Pilar de la Horadada"):
         rootid = "1"
         eventscreenId = "PTS2_TABLON"
         pagecode = "PTS2_TABLON"
