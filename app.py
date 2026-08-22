@@ -1,11 +1,18 @@
 import streamlit as st
 import json
 import os
+import datetime
+from datetime import datetime as dt
 import requests
 from src.municipalwatch.scrapers import obtener_extractor
 
 FICHERO_AYUNTAMIENTOS = "ayuntamientos.json"
 FICHERO_HISTORIAL = "historial_ids.json"
+
+hoy = datetime.date.today()
+ayer = hoy - datetime.timedelta(days=1)
+hace_7_dias = hoy - datetime.timedelta(days=7)
+hace_30_dias = hoy - datetime.timedelta(days=30)
 
 st.set_page_config(
     page_title="MunicipalWatch",
@@ -23,6 +30,37 @@ def cargar_json(ruta):
 def guardar_historial(historial):
     with open(FICHERO_HISTORIAL, "w", encoding="utf-8") as f:
         json.dump(historial, f, indent=4, ensure_ascii=False)
+
+def fecha_en_rango(fecha_str, rango):
+    if not fecha_str or fecha_str in ["N/A", "-"]:
+        return True
+    
+    if isinstance(rango, (list, tuple)):
+        if len(rango) == 1:
+            fecha_inicio = rango[0]
+            fecha_fin = rango[0]
+        elif len(rango) == 2:
+            fecha_inicio, fecha_fin = rango
+        else:
+            return True
+    else:
+        return True
+
+    fecha_obj = None
+    for fmt in ("%d/%m/%Y", "%Y-%m-%d", "%d-%m-%Y"):
+        try:
+            fecha_obj = dt.strptime(fecha_str.strip(), fmt).date()
+            break
+        except ValueError:
+            continue
+
+    if fecha_obj is None:
+        try:
+            fecha_obj = dt.strptime(fecha_str.split()[0], "%d/%m/%Y").date()
+        except Exception:
+            return True
+            
+    return fecha_inicio <= fecha_obj <= fecha_fin
 
 # Interfaz Header
 st.title("📡 MunicipalWatch")
@@ -50,6 +88,13 @@ provincias_seleccionadas = st.sidebar.multiselect(
     options=provincias_disponibles,
     default=provincias_disponibles,
     help="Selecciona la provincia que deseas incluir en el escaneo."
+)
+
+st.sidebar.subheader("Filtro Visual")
+rango_fechas = st.sidebar.date_input(
+    "Filtrar por fecha de publicación:",
+    value=(hoy, ayer, hace_7_dias, hace_30_dias),
+    help="Las novedades se filtrarán instantáneamente sin necesidad de re-escanear."
 )
 
 # Toggle de la barra lateral
@@ -168,7 +213,7 @@ if novedades:
                     # Filtrar o mostrar únicamente las novedades
                     for item in contenido:
                         # Opcional: Filtra por ítems con ID estrictamente superior al anterior
-                        if int(item.get("id", 0)) > nov['id_anterior']:
+                        if fecha_en_rango(item.get("f_pub"), rango_fechas):
                             st.caption(f"{nov['seccion']}")
                             col1, col2 = st.columns([1, 4])
                             with col1:
