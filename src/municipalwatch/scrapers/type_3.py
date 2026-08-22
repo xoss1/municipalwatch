@@ -130,8 +130,8 @@ def extract_type_3(session, item):
                     fecha_ret: f"{int(pubDateFin['day']):02d}/{int(pubDateFin['month']):02d}/{int(pubDateFin['year']):04d}"
                     bloque = {
                         "id": id_sintetico,
-                        "fecha_publicacion": ,
-                        "fecha_retirada": ,
+                        "fecha_publicacion": fecha_pub,
+                        "fecha_retirada": fecha_ret,
                         "titulo": descriptionProc,
                         "codigo_expediente": externString
                     }
