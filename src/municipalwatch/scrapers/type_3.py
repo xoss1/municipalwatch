@@ -23,7 +23,7 @@ def extract_type_3(session, item):
         esMazarron = True
     elif nombre == "Alhama de Murcia":
         esAlhama = True
-    elif nombre == "San Pedro del Pinatar":
+    elif nombre in ("San Pedro del Pinatar", "Novelda"):
         rootid = "2"
         eventscreenId = "PTS_TABLON"
         pagecode = "PTS_TABLON"
