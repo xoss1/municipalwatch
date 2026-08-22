@@ -137,11 +137,11 @@ def extract_type_3(session, item):
                     }
                     resultados.append(bloque)
 
-            #st.write(f"📄 **[DEBUG] id encontrados:** '{ids_encontrados}'")
+            st.write(f"📄 **[DEBUG] id encontrados:** '{ids_encontrados}'")
             if ids_encontrados and resultados:
                 return [resultados, max([int(i) for i in ids_encontrados])]
         except Exception as e:
-            #st.error(f"💥 **[DEBUG] Excepción capturada en {item['nombre']}:** `{e}`")
+            st.error(f"💥 **[DEBUG] Excepción capturada en {item['nombre']}:** `{e}`")
             pass
 
     return None
