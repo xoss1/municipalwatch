@@ -74,7 +74,7 @@
     {"nombre": "Almoradí", "type": 1, "host": "almoradi.sedelectronica.es", "url": "https://almoradi.sedelectronica.es/board", "referer": "", "provincia": "ALICANTE"},
     {"nombre": "Albatera", "type": 1, "host": "albatera.sedelectronica.es", "url": "https://albatera.sedelectronica.es/board", "referer": "", "provincia": "ALICANTE"},
     {"nombre": "Santa Pola", "type": 1, "host": "santapola.sedelectronica.es", "url": "https://santapola.sedelectronica.es/board", "referer": "", "provincia": "ALICANTE"},
-    {"nombre": "Elche", "type": 3, "host": "sede.elche.es", "url": "https://sede.elche.org/sta/CarpetaPublic/submitAjax.aa", "referer": "https://sede.elche.es/sta/CarpetaPublic/doEvent?APP_CODE=STA&PAGE_CODE=PTS2_TABLON", "provincia": "ALICANTE"},
+    {"nombre": "Elche", "type": 3, "host": "sede.elche.es", "url": "https://sede.elche.es/sta/CarpetaPublic/submitAjax.aa", "referer": "https://sede.elche.es/sta/CarpetaPublic/doEvent?APP_CODE=STA&PAGE_CODE=PTS2_TABLON", "provincia": "ALICANTE"},
     {"nombre": "Crevillente", "type": 2, "host": "crevillente.sedipualba.es", "url": "https://crevillente.sedipualba.es/tablondeanuncios/", "referer": "", "provincia": "ALICANTE"},
     {"nombre": "San Vicente del Raspeig", "type": 2, "host": "raspeig.sedipualba.es", "url": "https://raspeig.sedipualba.es/tablondeanuncios/", "referer": "", "provincia": "ALICANTE"},
     {"nombre": "San Juan de Alicante", "type": 1, "host": "santjoandalacant.sedelectronica.es", "url": "https://santjoandalacant.sedelectronica.es/board", "referer": "", "provincia": "ALICANTE"},
