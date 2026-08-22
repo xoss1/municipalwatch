@@ -244,30 +244,29 @@ if novedades:
                         novedades_visibles.append((item, fecha_pub))
 
                 if novedades_visibles:
-                    for nov_v in novedades_visibles:
-                        item = nov_v[0]
-                        fecha_pub = nov_v [1]
-                        # Determinación de la URL destino según el tipo
-                        url_tablon = nov['referer'] if nov['tipo'] in (0, 3) else nov['url']
+                    url_tablon = nov['referer'] if nov['tipo'] in (0, 3) else nov['url']
+                    label_expander = f"📍 {nov['seccion']} ({len(novedades_visibles)}) | [🔗 ver tablón de edictos]({url_tablon})"
+                    
+                    # Key única: incluye el índice del municipio y la opción de periodo para reactivar el filtro
+                    key_expander = f"exp_{prov}_{idx_nov}_{nov['id_nuevo']}_{periodo_seleccionado}_{expandir_todos}"
+                    
+                    with st.expander(
+                        label_expander, 
+                        expanded=expandir_todos,
+                        key=key_expander
+                    ):
+                        st.caption(f"ID Anterior: `{nov['id_anterior']}` ➔ ID Nuevo: `{nov['id_nuevo']}`")
+                        st.caption(f"{nov['seccion']}")
                         
-                        # Cabecera con Nombre y Enlace
-                        label_expander = f"📍 {nov['seccion']} | [🔗 ver tablón de edictos]({url_tablon})"
-                        
-                        # Se asigna dinámicamente según el estado del toggle
-                        with st.expander(
-                            label_expander, 
-                            expanded=expandir_todos,
-                            key=f"exp_{nov['seccion']}_{nov['id_nuevo']}_{expandir_todos}"
-                        ):
-                            st.caption(f"ID Anterior: `{nov['id_anterior']}` ➔ ID Nuevo: `{nov['id_nuevo']}`")
-                            st.caption(f"{nov['seccion']}")
+                        # 3. DIBUJAR CADA EDICTO DENTRO DEL EXPANDER
+                        for item, fecha_pub in novedades_visibles:
                             col1, col2 = st.columns([1, 4])
                             with col1:
                                 st.markdown(f"**ID:** `{item.get('id', '-')}`")
                                 st.caption(f"Exp: {item.get('cod_exp', '-')}")
                             with col2:
                                 st.markdown(f"**{item.get('titulo', '-')}**")
-                                st.text(f"Publicación: {item.get('fecha_pub', '-')} | Retirada: {item.get('fecha_ret', '-')}")
+                                st.text(f"Publicación: {fecha_pub or '-'} | Retirada: {item.get('fecha_ret', '-')}")
                             st.divider()
                 else:
                     st.write("No hay detalles desglosados disponibles para esta sección.")
