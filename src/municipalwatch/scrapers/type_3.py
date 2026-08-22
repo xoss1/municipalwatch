@@ -91,7 +91,7 @@ def extract_type_3(session, item):
             session_aa = session.get(url, impersonate="chrome", proxies=proxies, verify=False)
             time.sleep(1)
             st.write(f"🔍 **[DEBUG] Estatus de sesion GET {session_aa.status_code}:** `{url}`")
-            st.write(f"🔍 **[DEBUG] Escaneando {item['nombre']}:** `{url}`")
+            st.write(f"🔍 **[DEBUG] Escaneando {nombre}:** `{url}`")
 
             if esMazarron or esAlhama:
                 response = requests.get(item["referer"], proxies=proxies, verify=False)
@@ -113,13 +113,13 @@ def extract_type_3(session, item):
             if match:
                 data = json.loads(match.group(1))
             
-                for item in data:
-                    dboid = item.get("dboid")
-                    descriptionProc = item.get("descriptionProc")
-                    externString = item.get("externString")
+                for d in data:
+                    dboid = d.get("dboid")
+                    descriptionProc = d.get("descriptionProc")
+                    externString = d.get("externString")
             
-                    pubDateIni = item.get("pubDateIni", {})
-                    pubDateFin = item.get("pubDateFin")
+                    pubDateIni = d.get("pubDateIni", {})
+                    pubDateFin = d.get("pubDateFin")
             
                     pubDateFin = pubDateFin if pubDateFin else "N/A"
 
@@ -127,8 +127,8 @@ def extract_type_3(session, item):
                     bloque_unico = dboid[8:-5]
                     id_sintetico = int(f"{fecha_str}{bloque_unico}")
                     ids_encontrados.append(id_sintetico)
-                    fecha_pub: f"{int(pubDateIni['day']):02d}/{int(pubDateIni['month']):02d}/{int(pubDateIni['year']):04d}"
-                    fecha_ret: f"{int(pubDateFin['day']):02d}/{int(pubDateFin['month']):02d}/{int(pubDateFin['year']):04d}"
+                    fecha_pub = f"{int(pubDateIni['day']):02d}/{int(pubDateIni['month']):02d}/{int(pubDateIni['year']):04d}"
+                    fecha_ret = f"{int(pubDateFin['day']):02d}/{int(pubDateFin['month']):02d}/{int(pubDateFin['year']):04d}"
                     bloque = {
                         "id": id_sintetico,
                         "fecha_publicacion": fecha_pub,
@@ -142,7 +142,7 @@ def extract_type_3(session, item):
             if ids_encontrados and resultados:
                 return [resultados, max([int(i) for i in ids_encontrados])]
         except Exception as e:
-            st.error(f"💥 **[DEBUG] Excepción capturada en {item['nombre']}:** `{e}`")
+            st.error(f"💥 **[DEBUG] Excepción capturada en {nombre}:** `{e}`")
             pass
 
     return None
