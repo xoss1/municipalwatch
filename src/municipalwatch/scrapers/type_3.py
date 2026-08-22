@@ -107,7 +107,7 @@ def extract_type_3(session, item):
     
             ids_encontrados = []
             resultados = []
-            match = re.search(r'var\s+\w+\s*=\s*(\[\s*\{.*?\}\s*\]);', text, re.DOTALL)
+            match = re.search(r'var\s+\w+\s*=\s*(\[\s*\{.*?\}\s*\]);', html_text, re.DOTALL)
 
             if match:
                 data = json.loads(match.group(1))
