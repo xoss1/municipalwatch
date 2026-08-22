@@ -32,20 +32,16 @@ def guardar_historial(historial):
         json.dump(historial, f, indent=4, ensure_ascii=False)
 
 def fecha_en_rango(fecha_str, rango):
+    # Si la opción elegida es "Todas las fechas", mostramos todo directamente
+    if rango is None:
+        return True
+        
     if not fecha_str or fecha_str in ["N/A", "-"]:
         return True
-    
-    if isinstance(rango, (list, tuple)):
-        if len(rango) == 1:
-            fecha_inicio = rango[0]
-            fecha_fin = rango[0]
-        elif len(rango) == 2:
-            fecha_inicio, fecha_fin = rango
-        else:
-            return True
-    else:
-        return True
 
+    fecha_inicio, fecha_fin = rango
+
+    # Parsear los formatos de fecha más habituales
     fecha_obj = None
     for fmt in ("%d/%m/%Y", "%Y-%m-%d", "%d-%m-%Y"):
         try:
@@ -56,9 +52,10 @@ def fecha_en_rango(fecha_str, rango):
 
     if fecha_obj is None:
         try:
+            # Por si viene con hora (ej: "01/02/2026 10:30")
             fecha_obj = dt.strptime(fecha_str.split()[0], "%d/%m/%Y").date()
         except Exception:
-            return True
+            return True # Si no se logra interpretar, lo muestra por seguridad
             
     return fecha_inicio <= fecha_obj <= fecha_fin
 
@@ -90,12 +87,41 @@ provincias_seleccionadas = st.sidebar.multiselect(
     help="Selecciona la provincia que deseas incluir en el escaneo."
 )
 
-st.sidebar.subheader("Filtro Visual")
-rango_fechas = st.sidebar.date_input(
+# Definir la lista de opciones para el desplegable
+opciones_periodo = [
+    "Solo hoy",
+    "Hoy y ayer",
+    "Últimos 7 días",
+    "Últimos 30 días",
+    "Todas las fechas"
+]
+# Desplegable de selección única
+periodo_seleccionado = st.sidebar.selectbox(
     "Filtrar por fecha de publicación:",
-    value=(hoy, ayer, hace_7_dias, hace_30_dias),
+    options=opciones_periodo,
+    index=3,  # Selecciona "Últimos 30 días" por defecto
     help="Las novedades se filtrarán instantáneamente sin necesidad de re-escanear."
 )
+
+hoy = datetime.date.today()
+
+if periodo_seleccionado == "Solo hoy":
+    rango_fechas = (hoy, hoy)
+
+elif periodo_seleccionado == "Hoy y ayer":
+    ayer = hoy - datetime.timedelta(days=1)
+    rango_fechas = (ayer, hoy)
+
+elif periodo_seleccionado == "Últimos 7 días":
+    hace_7_dias = hoy - datetime.timedelta(days=7)
+    rango_fechas = (hace_7_dias, hoy)
+
+elif periodo_seleccionado == "Últimos 30 días":
+    hace_30_dias = hoy - datetime.timedelta(days=30)
+    rango_fechas = (hace_30_dias, hoy)
+
+else:  # "Todas las fechas"
+    rango_fechas = None
 
 # Toggle de la barra lateral
 expandir_todos = st.sidebar.toggle("Abrir / Cerrar todos", value=False)
