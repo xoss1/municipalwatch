@@ -120,15 +120,16 @@ def extract_type_3(session, item):
             
                     pubDateIni = d.get("pubDateIni", {})
                     pubDateFin = d.get("pubDateFin")
-            
-                    pubDateFin = pubDateFin if pubDateFin else "N/A"
 
                     fecha_str = f"{int(pubDateIni['year']):04d}{int(pubDateIni['month']):02d}{int(pubDateIni['day']):02d}{int(pubDateIni['hour']):02d}{int(pubDateIni['minute']):02d}{int(pubDateIni['second']):02d}"
                     bloque_unico = dboid[8:-5]
                     id_sintetico = int(f"{fecha_str}{bloque_unico}")
                     ids_encontrados.append(id_sintetico)
                     fecha_pub = f"{int(pubDateIni['day']):02d}/{int(pubDateIni['month']):02d}/{int(pubDateIni['year']):04d}"
-                    fecha_ret = f"{int(pubDateFin['day']):02d}/{int(pubDateFin['month']):02d}/{int(pubDateFin['year']):04d}"
+                    if pubDateFin:
+                        fecha_ret = f"{int(pubDateFin['day']):02d}/{int(pubDateFin['month']):02d}/{int(pubDateFin['year']):04d}"
+                    else:
+                        fecha_ret = "N/A"
                     bloque = {
                         "id": id_sintetico,
                         "fecha_publicacion": fecha_pub,
