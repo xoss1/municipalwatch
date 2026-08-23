@@ -256,10 +256,10 @@ if novedades:
                         key=key_expander
                     ):
                         st.caption(f"ID Anterior: `{nov['id_anterior']}` ➔ ID Nuevo: `{nov['id_nuevo']}`")
-                        st.caption(f"{nov['seccion']}")
                         
                         # 3. DIBUJAR CADA EDICTO DENTRO DEL EXPANDER
                         for item, fecha_pub in novedades_visibles:
+                            st.caption(f"{nov['seccion']}")
                             col1, col2 = st.columns([1, 4])
                             with col1:
                                 st.markdown(f"**ID:** `{item.get('id', '-')}`")
