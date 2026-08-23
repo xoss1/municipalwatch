@@ -1,5 +1,6 @@
 from curl_cffi import requests
 import re
+import requests as req
 import time
 import streamlit as st
 import json
