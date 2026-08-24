@@ -9,9 +9,11 @@ from src.municipalwatch.scrapers import obtener_extractor
 from scanner import ejecutar_escaneo
 
 devMode = True
+progress_bar = st.progress(0)
 
 FICHERO_AYUNTAMIENTOS = "ayuntamientos.json"
 FICHERO_HISTORIAL = "historial_ids.json"
+
 
 st.set_page_config(
     page_title="MunicipalWatch",
@@ -25,6 +27,9 @@ def cargar_json(ruta):
         with open(ruta, "r", encoding="utf-8") as f:
             return json.load(f)
     return {} if "historial" in ruta else []
+
+def actualizar_progreso(valor):
+    progress_bar.progress(valor)
 
 def guardar_historial(historial):
     with open(FICHERO_HISTORIAL, "w", encoding="utf-8") as f:
@@ -148,7 +153,8 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
         ayuntamientos,
         historial,
         tipos_seleccionados,
-        provincias_seleccionadas
+        provincias_seleccionadas,
+        progress_callback=actualizar_progreso      
     )
             
         guardar_historial(historial)
