@@ -32,9 +32,20 @@ def guardar_historial(historial):
     with open(FICHERO_HISTORIAL, "w", encoding="utf-8") as f:
         json.dump(historial, f, indent=4, ensure_ascii=False)
 
-def guardar_novedades(novedades):
-    with open(FICHERO_NOVEDADES, "a", encoding="utf-8") as f:
-        json.dump(novedades, f, indent=4, ensure_ascii=False)
+def guardar_novedades(novedades_nuevas):
+    novedades_existentes = []
+
+    if os.path.exists(FICHERO_NOVEDADES):
+        with open(FICHERO_NOVEDADES, "r", encoding="utf-8") as f:
+            try:
+                novedades_existentes = json.load(f)
+            except:
+                novedades_existentes = []
+
+    novedades_existentes.extend(novedades_nuevas)
+
+    with open(FICHERO_NOVEDADES, "w", encoding="utf-8") as f:
+        json.dump(novedades_existentes, f, indent=4, ensure_ascii=False)
 
 def cargar_novedades():
     if os.path.exists(FICHERO_NOVEDADES):
@@ -44,9 +55,14 @@ def cargar_novedades():
 
 def scan_reciente():
     from datetime import datetime, timedelta
+
     if os.path.exists(FICHERO_NOVEDADES):
+        if os.path.getsize(FICHERO_NOVEDADES) == 0:
+            return False  # 🔥 fuerza escaneo
+
         mod_time = datetime.fromtimestamp(os.path.getmtime(FICHERO_NOVEDADES))
         return datetime.now() - mod_time < timedelta(hours=2)
+
     return False
 
 def fecha_en_rango(fecha_str, rango):
@@ -238,7 +254,7 @@ if novedades:
                 # Filtrar o mostrar únicamente las novedades
                 novedades_visibles = []
                 for item in contenido:
-                    fecha_pub = item.get("fecha_pub")
+                    fecha_pub = item.get("fecha_publicacion")
                     # Opcional: Filtra por ítems con ID estrictamente superior al anterior
                     if fecha_en_rango(fecha_pub, rango_fechas):
                         novedades_visibles.append((item, fecha_pub))
