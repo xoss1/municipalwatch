@@ -63,7 +63,7 @@ def extract_type_1(session, item):
         ids_encontrados = []
         resultados = []
         # 1. Estrategia primaria: Extraer filas (<tr>) para vincular Fecha de Publicación + Nº Expediente
-        filas = re.findall(r'<tr[^>]*>(.*?)</tr>', html_text, re.DOTALL)
+        filas = re.findall(r'<tr[^>]*>(.*?)</tr>', html_acumulado, re.DOTALL)
         for fila in filas:
             match_exp = re.search(r'class_folderCode[^>]*>.*?<span>([^<]+)</span>', fila, re.DOTALL)
             match_fecha = re.search(r'class_dateFrom[^>]*>.*?<span>([^<]+)</span>', fila, re.DOTALL)
