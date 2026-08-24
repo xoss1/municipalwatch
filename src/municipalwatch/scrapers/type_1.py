@@ -42,7 +42,7 @@ def extract_type_1(session, item):
               break
         
           # Tomamos el parámetro (o resultado[-1] si hubiera más de uno en el fragmento)
-          parametro = resultado[0]
+          parametro = resultado[-1]
           url = url_base + parametro
         
           # 3. Hacemos la petición
