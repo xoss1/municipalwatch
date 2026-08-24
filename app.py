@@ -12,6 +12,7 @@ devMode = False
 
 FICHERO_AYUNTAMIENTOS = "ayuntamientos.json"
 FICHERO_HISTORIAL = "historial_ids.json"
+FICHERO_NOVEDADES = "novedades.json"
 
 
 st.set_page_config(
@@ -30,6 +31,23 @@ def cargar_json(ruta):
 def guardar_historial(historial):
     with open(FICHERO_HISTORIAL, "w", encoding="utf-8") as f:
         json.dump(historial, f, indent=4, ensure_ascii=False)
+
+def guardar_novedades(novedades):
+    with open(FICHERO_NOVEDADES, "w", encoding="utf-8") as f:
+        json.dump(novedades, f, indent=4, ensure_ascii=False)
+
+def cargar_novedades():
+    if os.path.exists(FICHERO_NOVEDADES):
+        with open(FICHERO_NOVEDADES, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return []
+
+def scan_reciente():
+    from datetime import datetime, timedelta
+    if os.path.exists(FICHERO_NOVEDADES):
+        mod_time = datetime.fromtimestamp(os.path.getmtime(FICHERO_NOVEDADES))
+        return datetime.now() - mod_time < timedelta(hours=2)
+    return False
 
 def fecha_en_rango(fecha_str, rango):
     """
@@ -177,9 +195,9 @@ if not devMode:
 
     if dentro_horario() and toca_ejecutar():
         lanzar = True
-
+novedades = cargar_novedades()
 # Botón de escaneo
-if lanzar:
+if lanzar and not scan_reciente():
     progress_bar = st.progress(0)
 
     def actualizar_progreso(valor):
@@ -195,6 +213,7 @@ if lanzar:
     guardar_historial(historial)
     # Guardamos las novedades en session_state para que NO desaparezcan al pulsar botones o toggles
     st.session_state["novedades"] = novedades_temp
+    guardar_novedades(novedades_temp)
     from datetime import datetime, timedelta
     ahora = datetime.now()
     st.session_state["last_run"] = ahora
@@ -203,7 +222,7 @@ if lanzar:
     st.divider()
 
 # Renderizado de Resultados
-novedades = st.session_state.get("novedades", [])
+novedades = cargar_novedades()
 
 # Resultados
 if novedades:
