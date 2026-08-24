@@ -1,7 +1,7 @@
 import requests
 from src.municipalwatch.scrapers import obtener_extractor
 
-def ejecutar_escaneo(ayuntamientos, historial, tipos, provincias):
+def ejecutar_escaneo(ayuntamientos, historial, tipos, provincias, progress_callback=None):
 
   session = requests.Session()
   novedades_temp = []
