@@ -193,7 +193,6 @@ if lanzar:
     )
             
     guardar_historial(historial)
-    status_text.text("✅ Escaneo finalizado.")
     # Guardamos las novedades en session_state para que NO desaparezcan al pulsar botones o toggles
     st.session_state["novedades"] = novedades_temp
     from datetime import datetime, timedelta
