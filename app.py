@@ -29,7 +29,7 @@ def cargar_json(ruta):
     return {} if "historial" in ruta else []
 
 def guardar_historial(historial):
-    with open(FICHERO_HISTORIAL, "w", encoding="utf-8") as f:
+    with open(FICHERO_HISTORIAL, "a", encoding="utf-8") as f:
         json.dump(historial, f, indent=4, ensure_ascii=False)
 
 def guardar_novedades(novedades):
