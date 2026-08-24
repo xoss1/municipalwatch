@@ -12,10 +12,10 @@ def extract_type_1(session, item):
     }
 
     try:
-        url = item["url"]
+        url_base = item["url"]
         #st.write(f"🔍 **[DEBUG] Escaneando {item['nombre']}:** `{url}`")
         session = requests.Session()
-        response = session.get(url, headers=headers, timeout=15, allow_redirects=True)
+        response = session.get(url_base, headers=headers, timeout=15, allow_redirects=True)
         #st.write(f"👉 **[DEBUG] Código HTTP respuesta:** `{response.status_code}`")
 
         if response.status_code != 200:
@@ -24,13 +24,22 @@ def extract_type_1(session, item):
 
         html_text = response.text
         #st.write(f"📄 **[DEBUG] Longitud del HTML recibido:** `{len(html_text)}` caracteres")
+
+        patron = r'<button\b[^>]*?id="[^"]+"[^>]*?class="c-button c-button-b"[^>]*?onclick="[^"]*?wicketAjaxGet\(\s*[\'\"]([^\'\"]+)[\'\"][^"]*?"[^>]*?>.*?Mostrar más.*?</button>'
+
+        for i in range(0,5):
+            resultado = re.findall(patron, html_text, re.DOTALL)
+            parametro = resultado.groups(1)
+            url = url_base+parametro
+            response_page = session.get(url, headers=headers, timeout=15, allow_redirects=True)
+            html_text = html_text+response_page.text           
+        
         # Buscar apariciones de preview-document
         uuids = re.findall(r'preview-document/([a-f0-9-]+)', html_text)
         #st.write(f"📎 **[DEBUG] Documentos 'preview-document' hallados:** `{len(uuids)}`")
 
         ids_encontrados = []
         resultados = []
-
         # 1. Estrategia primaria: Extraer filas (<tr>) para vincular Fecha de Publicación + Nº Expediente
         filas = re.findall(r'<tr[^>]*>(.*?)</tr>', html_text, re.DOTALL)
         for fila in filas:
