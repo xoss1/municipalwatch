@@ -226,7 +226,7 @@ novedades = cargar_novedades()
 
 # Resultados
 if novedades:
-    st.success(f"🔥 ¡Novedades detectadas en {len(st.session_state.novedades)} municipio(s)!")
+    st.success(f"🔥 ¡Novedades detectadas en {len(st.session_state.get("novedades", []))} municipio(s)!")
     for prov in provincias_seleccionadas:
         st.markdown(f"**PROVINCIA: {prov}**")
         novedades_provincia = [nov for nov in novedades if nov.get("provincia") == prov]
