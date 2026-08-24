@@ -14,7 +14,8 @@ def ejecutar_escaneo(ayuntamientos, historial, tipos, provincias, progress_callb
       st.info("No se encontraron municipios con los tipos seleccionados.")
   else:
       progress_bar = st.progress(0)
-      status_text = st.empty() + "BARRA EN SCANNER"
+      status_text = st.empty()
+      st.write("BARRA EN SCANNER")
       
   
       REMPLAZOS = str.maketrans("áéíóúÁÉÍÓÚñÑ", "aeiouAEIOUnN")
