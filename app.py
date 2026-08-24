@@ -181,7 +181,7 @@ if not devMode:
 # Botón de escaneo
 if lanzar:
     progress_bar = st.progress(0)
-    status_text = st.empty()
+    status_text = st.empty() + "BARRA EN APP"
 
     def actualizar_progreso(valor):
         progress_bar.progress(valor)
