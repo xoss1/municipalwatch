@@ -9,7 +9,6 @@ from src.municipalwatch.scrapers import obtener_extractor
 from scanner import ejecutar_escaneo
 
 devMode = True
-progress_bar = st.progress(0)
 
 FICHERO_AYUNTAMIENTOS = "ayuntamientos.json"
 FICHERO_HISTORIAL = "historial_ids.json"
@@ -27,9 +26,6 @@ def cargar_json(ruta):
         with open(ruta, "r", encoding="utf-8") as f:
             return json.load(f)
     return {} if "historial" in ruta else []
-
-def actualizar_progreso(valor):
-    progress_bar.progress(valor)
 
 def guardar_historial(historial):
     with open(FICHERO_HISTORIAL, "w", encoding="utf-8") as f:
@@ -90,6 +86,11 @@ historial = cargar_json(FICHERO_HISTORIAL)
 
 st.sidebar.header("⚙️ Configuración")
 st.sidebar.info(f"Municipios configurados: **{len(ayuntamientos)}**")
+if "last_run" in st.session_state:
+    st.sidebar.info(f"🕒 Último escaneo: {st.session_state['last_run']}")
+
+if "next_run" in st.session_state:
+    st.sidebar.info(f"⏭ Próximo escaneo: {st.session_state['next_run']}")
 
 # Desplegable para seleccionar el tipo de edictos a escanear
 tipos_disponibles = [0, 1, 2, 3, 4, 5]
@@ -147,9 +148,39 @@ else:  # "Todas las fechas"
 # Toggle de la barra lateral
 expandir_todos = st.sidebar.toggle("Abrir / Cerrar todos", value=False)
 
+if devMode:
+    lanzar = st.button("🚀 Iniciar Escaneo de Edictos", type="primary")
+else:
+    lanzar = False
+
+# 🤖 Modo automático (solo si devMode = False)
+if not devMode:
+    from datetime import datetime, time, timedelta
+
+    def dentro_horario():
+        ahora = datetime.now()
+        return (
+            ahora.weekday() < 5 and
+            time(7, 0) <= ahora.time() <= time(19, 0)
+        )
+
+    def toca_ejecutar():
+        ahora = datetime.now()
+        if "next_run" not in st.session_state:
+            return True
+        return ahora >= st.session_state.next_run
+
+    if dentro_horario() and toca_ejecutar():
+        lanzar = True
+
 # Botón de escaneo
-if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
-        novedades_temp, historial = ejecutar_escaneo(
+if lanzar:
+    progress_bar = st.progress(0)
+    status_text = st.empty()
+
+    def actualizar_progreso(valor):
+        progress_bar.progress(valor)
+    novedades_temp, historial = ejecutar_escaneo(
         ayuntamientos,
         historial,
         tipos_seleccionados,
@@ -157,12 +188,16 @@ if st.button("🚀 Iniciar Escaneo de Edictos", type="primary"):
         progress_callback=actualizar_progreso      
     )
             
-        guardar_historial(historial)
-        status_text.text("✅ Escaneo finalizado.")
-        # Guardamos las novedades en session_state para que NO desaparezcan al pulsar botones o toggles
-        st.session_state["novedades"] = novedades_temp
-        
-        st.divider()
+    guardar_historial(historial)
+    status_text.text("✅ Escaneo finalizado.")
+    # Guardamos las novedades en session_state para que NO desaparezcan al pulsar botones o toggles
+    st.session_state["novedades"] = novedades_temp
+    from datetime import datetime, timedelta
+    ahora = datetime.now()
+    st.session_state["last_run"] = ahora
+    st.session_state["next_run"] = ahora + timedelta(hours=2)
+    
+    st.divider()
 
 # Renderizado de Resultados
 novedades = st.session_state.get("novedades", [])
