@@ -68,4 +68,6 @@ def ejecutar_escaneo(ayuntamientos, historial, tipos, provincias):
                       historial[nombre] = id_actual
               else:
                   pass
+              if progress_callback:
+                progress_callback((idx + 1) / len(ayuntamientos_filtrados))
   return novedades_temp, historial
