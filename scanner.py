@@ -7,7 +7,7 @@ def ejecutar_escaneo(ayuntamientos, historial, tipos, provincias, progress_callb
   novedades_temp = []
   
   # Filtrar ayuntamientos según los tipos seleccionados
-  ayuntamientos_filtrados = [item for item in ayuntamientos if item.get("type") in tipos_seleccionados and item.get("provincia") in provincias_seleccionadas]
+  ayuntamientos_filtrados = [item for item in ayuntamientos if item.get("type") in tipos and item.get("provincia") in provincias]
   
   if not ayuntamientos_filtrados:
       st.info("No se encontraron municipios con los tipos seleccionados.")
