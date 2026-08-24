@@ -25,14 +25,36 @@ def extract_type_1(session, item):
         html_text = response.text
         #st.write(f"📄 **[DEBUG] Longitud del HTML recibido:** `{len(html_text)}` caracteres")
 
-        patron = r'<button\b[^>]*?id="[^"]+"[^>]*?class="c-button c-button-b"[^>]*?onclick="[^"]*?wicketAjaxGet\(\s*[\'\"]([^\'\"]+)[\'\"][^"]*?"[^>]*?>.*?Mostrar más.*?</button>'
+        patron = r"wicketAjaxGet\('\?(x=[^']+)'"
 
-        for i in range(0,5):
-            resultado = re.findall(patron, html_text, re.DOTALL)
-            parametro = resultado.groups(1)
-            url = url_base+parametro
-            response_page = session.get(url, headers=headers, timeout=15, allow_redirects=True)
-            html_text = html_text+response_page.text           
+        # Guardamos la página inicial en la variable acumulada
+        html_acumulado = html_text
+        
+        for i in range(0, 5):
+          print(i)
+        
+          # 1. Buscamos el botón en el HTML de la iteración actual
+          resultado = re.findall(patron, html_text, re.DOTALL)
+        
+          # 2. Control de seguridad: si no hay más botones, salimos del bucle
+          if not resultado:
+              print(f"No se encontró el botón 'Mostrar más' en la iteración {i}. Fin del proceso.")
+              break
+        
+          # Tomamos el parámetro (o resultado[-1] si hubiera más de uno en el fragmento)
+          parametro = resultado[0]
+          url = url_base + parametro
+        
+          # 3. Hacemos la petición
+          response_page = session.get(url, headers=headers, timeout=15, allow_redirects=True)
+        
+          # 4. Actualizamos html_text SOLO con la respuesta nueva para la siguiente búsqueda
+          html_text = response_page.text
+        
+          # 5. Acumulamos el nuevo fragmento en el texto final
+          html_acumulado += response_page.text
+        
+          # Al terminar el bucle, 'html_acumulado' contendrá la página inicial + las 5 respuestas         
         
         # Buscar apariciones de preview-document
         uuids = re.findall(r'preview-document/([a-f0-9-]+)', html_text)
