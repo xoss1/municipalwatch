@@ -69,4 +69,5 @@ def ejecutar_escaneo(ayuntamientos, historial, tipos, provincias, progress_callb
                   pass
               if progress_callback:
                 progress_callback((idx + 1) / len(ayuntamientos_filtrados))
+          status_text.text("✅ Escaneo finalizado.")
   return novedades_temp, historial
