@@ -94,20 +94,25 @@ if "next_run" in st.session_state:
 
 # Desplegable para seleccionar el tipo de edictos a escanear
 tipos_disponibles = [0, 1, 2, 3, 4, 5]
-tipos_seleccionados = st.sidebar.multiselect(
-    "Filtrar por tipo a escanear:",
-    options=tipos_disponibles,
-    default=tipos_disponibles,
-    help="Selecciona los tipos (0 al 5) que deseas incluir en el escaneo."
-)
-
 provincias_disponibles = ["MURCIA", "ALICANTE"]
-provincias_seleccionadas = st.sidebar.multiselect(
-    "Filtrar por provincia a escanear:",
-    options=provincias_disponibles,
-    default=provincias_disponibles,
-    help="Selecciona la provincia que deseas incluir en el escaneo."
-)
+
+if devMode:
+    tipos_seleccionados = st.sidebar.multiselect(
+        "Filtrar por tipo a escanear:",
+        options=tipos_disponibles,
+        default=tipos_disponibles,
+        help="Selecciona los tipos (0 al 5) que deseas incluir en el escaneo."
+    )
+    
+    provincias_seleccionadas = st.sidebar.multiselect(
+        "Filtrar por provincia a escanear:",
+        options=provincias_disponibles,
+        default=provincias_disponibles,
+        help="Selecciona la provincia que deseas incluir en el escaneo."
+    )
+else:
+    tipos_seleccionados = tipos_disponibles
+    provincias_seleccionadas = provincias_disponibles
 
 # Definir la lista de opciones para el desplegable
 opciones_periodo = [
