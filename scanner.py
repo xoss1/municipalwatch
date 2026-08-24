@@ -1,4 +1,5 @@
 import requests
+import streamlit as st
 from src.municipalwatch.scrapers import obtener_extractor
 
 def ejecutar_escaneo(ayuntamientos, historial, tipos, provincias, progress_callback=None):
