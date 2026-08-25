@@ -252,7 +252,6 @@ if novedades:
             contenido = nov.get("contenido")
             
             if contenido:
-                st.write("Hay contenido: {contenido}")
                 # Filtrar o mostrar únicamente las novedades
                 novedades_visibles = []
                 for item in contenido:
