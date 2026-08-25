@@ -31,14 +31,12 @@ def extract_type_1(session, item):
         html_acumulado = html_text
         
         for i in range(0, 5):
-          print(i)
-        
+
           # 1. Buscamos el botón en el HTML de la iteración actual
           resultado = re.findall(patron, html_text, re.DOTALL)
         
           # 2. Control de seguridad: si no hay más botones, salimos del bucle
           if not resultado:
-              print(f"No se encontró el botón 'Mostrar más' en la iteración {i}. Fin del proceso.")
               break
         
           # Tomamos el parámetro (o resultado[-1] si hubiera más de uno en el fragmento)
