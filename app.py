@@ -242,6 +242,7 @@ novedades = st.session_state.get("novedades", cargar_novedades())
 
 # Resultados
 if novedades:
+    print(novedades)
     st.success(f"🔥 ¡Novedades detectadas en {len(novedades)} municipio(s)!")
     for prov in provincias_seleccionadas:
         st.markdown(f"**PROVINCIA: {prov}**")
@@ -251,10 +252,12 @@ if novedades:
             contenido = nov.get("contenido")
             
             if contenido:
+                st.write("Hay contenido: {contenido}")
                 # Filtrar o mostrar únicamente las novedades
                 novedades_visibles = []
                 for item in contenido:
                     fecha_pub = item.get("fecha_publicacion")
+                    
                     # Opcional: Filtra por ítems con ID estrictamente superior al anterior
                     if fecha_en_rango(fecha_pub, rango_fechas):
                         novedades_visibles.append((item, fecha_pub))
@@ -285,7 +288,7 @@ if novedades:
                                 st.text(f"Publicación: {fecha_pub or '-'} | Retirada: {item.get('fecha_ret', '-')}")
                             st.divider()
                 else:
-                    #st.write("No hay detalles desglosados disponibles para esta sección.")
+                    st.write("No hay detalles desglosados disponibles para esta sección.")
                     pass
                     
 elif "novedades" in st.session_state:
