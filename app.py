@@ -177,21 +177,21 @@ periodo_seleccionado = st.sidebar.selectbox(
     help="Las novedades se filtrarán instantáneamente sin necesidad de re-escanear."
 )
 
-hoy = dt.date.today()
+hoy = datetime.date.today()
 
 if periodo_seleccionado == "Solo hoy":
     rango_fechas = (hoy, hoy)
 
 elif periodo_seleccionado == "Hoy y ayer":
-    ayer = hoy - dt.timedelta(days=1)
+    ayer = hoy - datetime.timedelta(days=1)
     rango_fechas = (ayer, hoy)
 
 elif periodo_seleccionado == "Últimos 7 días":
-    hace_7_dias = hoy - dt.timedelta(days=7)
+    hace_7_dias = hoy - datetime.timedelta(days=7)
     rango_fechas = (hace_7_dias, hoy)
 
 elif periodo_seleccionado == "Últimos 30 días":
-    hace_30_dias = hoy - dt.timedelta(days=30)
+    hace_30_dias = hoy - datetime.timedelta(days=30)
     rango_fechas = (hace_30_dias, hoy)
 
 else:  # "Todas las fechas"
