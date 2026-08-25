@@ -200,8 +200,11 @@ else:  # "Todas las fechas"
 # Toggle de la barra lateral
 expandir_todos = st.sidebar.toggle("Abrir / Cerrar todos", value=False)
 
+scanReciente = scan_reciente()
+
 if devMode == True:
     lanzar = st.button("🚀 Iniciar Escaneo de Edictos", type="primary")
+    scanReciente = False
 else:
     lanzar = False
     if dentro_horario() and toca_ejecutar():
@@ -209,7 +212,7 @@ else:
 
 novedades = cargar_novedades()
 # Botón de escaneo
-if lanzar and not scan_reciente():
+if lanzar and not scanReciente:
     progress_bar = st.progress(0)
 
     def actualizar_progreso(valor):
