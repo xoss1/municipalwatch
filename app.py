@@ -3,12 +3,13 @@ import json
 import os
 import datetime
 from datetime import datetime as dt
+from datetime import time, timedelta
 import requests
 import re
 from src.municipalwatch.scrapers import obtener_extractor
 from scanner import ejecutar_escaneo
 
-devMode = False
+devMode = True
 
 FICHERO_AYUNTAMIENTOS = "ayuntamientos.json"
 FICHERO_HISTORIAL = "historial_ids.json"
@@ -54,16 +55,28 @@ def cargar_novedades():
     return []
 
 def scan_reciente():
-    from datetime import datetime, timedelta
 
     if os.path.exists(FICHERO_NOVEDADES):
         if os.path.getsize(FICHERO_NOVEDADES) == 0:
             return False  # 🔥 fuerza escaneo
 
-        mod_time = datetime.fromtimestamp(os.path.getmtime(FICHERO_NOVEDADES))
-        return datetime.now() - mod_time < timedelta(hours=2)
+        mod_time = dt.fromtimestamp(os.path.getmtime(FICHERO_NOVEDADES))
+        return dt.now() - mod_time < timedelta(hours=2)
 
     return False
+
+def dentro_horario():
+    ahora = dt.now()
+    return (
+        ahora.weekday() < 5 and
+        time(7, 0) <= ahora.time() <= time(19, 0)
+    )
+
+def toca_ejecutar():
+    ahora = dt.now()
+    if "next_run" not in st.session_state:
+        return True
+    return ahora >= st.session_state.next_run
 
 def fecha_en_rango(fecha_str, rango):
     """
@@ -164,21 +177,21 @@ periodo_seleccionado = st.sidebar.selectbox(
     help="Las novedades se filtrarán instantáneamente sin necesidad de re-escanear."
 )
 
-hoy = datetime.date.today()
+hoy = dt.date.today()
 
 if periodo_seleccionado == "Solo hoy":
     rango_fechas = (hoy, hoy)
 
 elif periodo_seleccionado == "Hoy y ayer":
-    ayer = hoy - datetime.timedelta(days=1)
+    ayer = hoy - dt.timedelta(days=1)
     rango_fechas = (ayer, hoy)
 
 elif periodo_seleccionado == "Últimos 7 días":
-    hace_7_dias = hoy - datetime.timedelta(days=7)
+    hace_7_dias = hoy - dt.timedelta(days=7)
     rango_fechas = (hace_7_dias, hoy)
 
 elif periodo_seleccionado == "Últimos 30 días":
-    hace_30_dias = hoy - datetime.timedelta(days=30)
+    hace_30_dias = hoy - dt.timedelta(days=30)
     rango_fechas = (hace_30_dias, hoy)
 
 else:  # "Todas las fechas"
@@ -187,30 +200,13 @@ else:  # "Todas las fechas"
 # Toggle de la barra lateral
 expandir_todos = st.sidebar.toggle("Abrir / Cerrar todos", value=False)
 
-if devMode:
+if devMode == True:
     lanzar = st.button("🚀 Iniciar Escaneo de Edictos", type="primary")
 else:
     lanzar = False
-
-# 🤖 Modo automático (solo si devMode = False)
-if not devMode:
-    from datetime import datetime, time, timedelta
-
-    def dentro_horario():
-        ahora = datetime.now()
-        return (
-            ahora.weekday() < 5 and
-            time(7, 0) <= ahora.time() <= time(19, 0)
-        )
-
-    def toca_ejecutar():
-        ahora = datetime.now()
-        if "next_run" not in st.session_state:
-            return True
-        return ahora >= st.session_state.next_run
-
     if dentro_horario() and toca_ejecutar():
         lanzar = True
+
 novedades = cargar_novedades()
 # Botón de escaneo
 if lanzar and not scan_reciente():
@@ -230,8 +226,7 @@ if lanzar and not scan_reciente():
     # Guardamos las novedades en session_state para que NO desaparezcan al pulsar botones o toggles
     st.session_state["novedades"] = novedades_temp
     guardar_novedades(novedades_temp)
-    from datetime import datetime, timedelta
-    ahora = datetime.now()
+    ahora = dt.now()
     st.session_state["last_run"] = ahora
     st.session_state["next_run"] = ahora + timedelta(hours=2)
     
@@ -246,7 +241,6 @@ novedades = st.session_state.get("novedades", cargar_novedades())
 # Resultados
 if novedades:
     print(novedades)
-    st.success(f"🔥 ¡Novedades detectadas en {len(novedades)} municipio(s)!")
     for prov in provincias_seleccionadas:
         st.markdown(f"**PROVINCIA: {prov}**")
         novedades_provincia = [nov for nov in novedades if nov.get("provincia") == prov]
