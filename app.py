@@ -8,7 +8,7 @@ import re
 from src.municipalwatch.scrapers import obtener_extractor
 from scanner import ejecutar_escaneo
 
-devMode = False
+devMode = True
 
 FICHERO_AYUNTAMIENTOS = "ayuntamientos.json"
 FICHERO_HISTORIAL = "historial_ids.json"
@@ -237,6 +237,9 @@ if lanzar:
     
     st.divider()
 
+if "novedades" not in st.session_state:
+    st.session_state["novedades"] = cargar_novedades()
+
 # Renderizado de Resultados
 novedades = st.session_state.get("novedades", cargar_novedades())
 
@@ -289,8 +292,7 @@ if novedades:
                 else:
                     #st.write("No hay detalles desglosados disponibles para esta sección.")
                     pass
-                    
-elif "novedades" in st.session_state:
+else:
     st.info("Cero novedades en todas las páginas rastreadas.")
 # Vista rápida del historial guardado
 #st.divider()
