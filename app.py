@@ -213,7 +213,7 @@ if not devMode:
         lanzar = True
 novedades = cargar_novedades()
 # Botón de escaneo
-if lanzar:
+if lanzar and not scan_reciente():
     progress_bar = st.progress(0)
 
     def actualizar_progreso(valor):
