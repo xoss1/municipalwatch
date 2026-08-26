@@ -8,6 +8,7 @@ import requests
 import re
 from src.municipalwatch.scrapers import obtener_extractor
 from scanner import ejecutar_escaneo
+from supabase import create_client, Client
 
 devMode = True
 
@@ -15,6 +16,10 @@ FICHERO_AYUNTAMIENTOS = "ayuntamientos.json"
 FICHERO_HISTORIAL = "historial_ids.json"
 FICHERO_NOVEDADES = "novedades.json"
 
+# Inicializar cliente de Supabase
+url = st.secrets["SUPABASE_URL"]
+key = st.secrets["SUPABASE_KEY"]
+supabase: Client = create_client(url, key)
 
 st.set_page_config(
     page_title="MunicipalWatch",
@@ -41,7 +46,7 @@ def guardar_novedades(novedades_nuevas):
     st.write(f"🚩 [BANDERA 3] Novedades existentes leídas del archivo: {len(novedades_existentes)}")
 
     if novedades_nuevas:
-        novedades_existentes.extend(novedades_nuevas)
+        supabase.table("novedades").insert(novedades_nuevas).execute()
         st.write(f"🚩 [BANDERA 4] Lista combinada total a escribir: {len(novedades_existentes)}")
     else:
         st.write("🚩 [BANDERA 4] No hay novedades nuevas para añadir.")
@@ -54,34 +59,15 @@ def guardar_novedades(novedades_nuevas):
         st.write(f"🚩 [BANDERA 5] ❌ ERROR CRÍTICO al escribir en el disco: {e}")
 
 def cargar_novedades():
-    st.write("  🔹 [BANDERA A] Intentando cargar_novedades()...")
-    
-    if os.path.exists(FICHERO_NOVEDADES):
-        st.write(f"  🔹 [BANDERA B] El archivo '{FICHERO_NOVEDADES}' EXISTE en disco.")
-        try:
-            with open(FICHERO_NOVEDADES, "r", encoding="utf-8") as f:
-                datos = json.load(f)
-                st.write(f"  🔹 [BANDERA C] JSON leído. Tipo de dato detectado: {type(datos)}")
-                st.write(f"   🔹 [BANDERA C1] Datos encontrados: {datos}")
-                
-                if isinstance(datos, list):
-                    st.write("  🔹 [BANDERA D] ✅ Formato válido: Es una LISTA.")
-                    return datos
-                else:
-                    st.write(f"  🔹 [BANDERA D] ⚠️ FORMATO INCORRECTO: Se esperaba 'list' pero se encontró '{type(datos).__name__}'. Se ignoran datos.")
-                    return []
-        except json.JSONDecodeError as e:
-            st.write(f"  🔹 [BANDERA ERROR] ❌ Error de formato JSON (archivo corrupto o vacío): {e}")
-            return []
-        except Exception as e:
-            st.write(f"  🔹 [BANDERA ERROR] ❌ Error inesperado abriendo archivo: {e}")
-            return []
-            
-    st.write(f"  🔹 [BANDERA B] ⚠️ El archivo '{FICHERO_NOVEDADES}' NO EXISTE.")
-    return []
+    try:
+        # Trae todas las novedades ordenadas por fecha de creación
+        respuesta = supabase.table("novedades").select("*").order("created_at", desc=True).execute()
+        return respuesta.data
+    except Exception as e:
+        st.error(f"Error cargando novedades de Supabase: {e}")
+        return []
 
 def scan_reciente():
-
     if os.path.exists(FICHERO_NOVEDADES):
         if os.path.getsize(FICHERO_NOVEDADES) == 0:
             return False  # 🔥 fuerza escaneo
