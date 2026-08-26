@@ -62,6 +62,7 @@ def cargar_novedades():
             with open(FICHERO_NOVEDADES, "r", encoding="utf-8") as f:
                 datos = json.load(f)
                 st.write(f"  🔹 [BANDERA C] JSON leído. Tipo de dato detectado: {type(datos)}")
+                st.write(f"   🔹 [BANDERA C1] Datos encontrados: {datos}")
                 
                 if isinstance(datos, list):
                     st.write("  🔹 [BANDERA D] ✅ Formato válido: Es una LISTA.")
