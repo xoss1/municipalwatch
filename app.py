@@ -39,24 +39,9 @@ def guardar_historial(historial):
         json.dump(historial, f, indent=4, ensure_ascii=False)
         
 def guardar_novedades(novedades_nuevas):
-    st.write("\n🚩 [BANDERA 1] Entrando en guardar_novedades()")
-    st.write(f"🚩 [BANDERA 2] Novedades recibidas para guardar: {len(novedades_nuevas)}")
-    
-    novedades_existentes = cargar_novedades()
-    st.write(f"🚩 [BANDERA 3] Novedades existentes leídas del archivo: {len(novedades_existentes)}")
-
     if novedades_nuevas:
         supabase.table("novedades").insert(novedades_nuevas).execute()
-        st.write(f"🚩 [BANDERA 4] Lista combinada total a escribir: {len(novedades_existentes)}")
     else:
-        st.write("🚩 [BANDERA 4] No hay novedades nuevas para añadir.")
-
-    try:
-        with open(FICHERO_NOVEDADES, "w", encoding="utf-8") as f:
-            json.dump(novedades_existentes, f, indent=4, ensure_ascii=False)
-        st.write("🚩 [BANDERA 5] ✅ Archivo novedades.json GUARDADO CON ÉXITO")
-    except Exception as e:
-        st.write(f"🚩 [BANDERA 5] ❌ ERROR CRÍTICO al escribir en el disco: {e}")
 
 def cargar_novedades():
     try:
