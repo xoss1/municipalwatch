@@ -39,7 +39,7 @@ def guardar_novedades(novedades_nuevas):
     if os.path.exists(FICHERO_NOVEDADES):
         with open(FICHERO_NOVEDADES, "r", encoding="utf-8") as f:
             try:
-                novedades_existentes = list(json.load(f))
+                novedades_existentes = json.load(f)
             except:
                 print("No se pudo cargar la lista de novedades")
 
