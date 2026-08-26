@@ -32,27 +32,24 @@ def cargar_json(ruta):
 def guardar_historial(historial):
     with open(FICHERO_HISTORIAL, "w", encoding="utf-8") as f:
         json.dump(historial, f, indent=4, ensure_ascii=False)
-
-def guardar_novedades(novedades_nuevas):
-    novedades_existentes = []
-
-    if os.path.exists(FICHERO_NOVEDADES):
-        with open(FICHERO_NOVEDADES, "r", encoding="utf-8") as f:
-            try:
-                novedades_existentes = json.load(f)
-            except:
-                print("No se pudo cargar la lista de novedades")
-
-    novedades_existentes.extend(novedades_nuevas)
-
-    with open(FICHERO_NOVEDADES, "w", encoding="utf-8") as f:
-        json.dump(novedades_existentes, f, indent=4, ensure_ascii=False)
-
+        
 def cargar_novedades():
     if os.path.exists(FICHERO_NOVEDADES):
-        with open(FICHERO_NOVEDADES, "r", encoding="utf-8") as f:
-            return json.load(f)
+        try:
+            with open(FICHERO_NOVEDADES, "r", encoding="utf-8") as f:
+                datos = json.load(f)
+                # Garantizamos que devuelva una lista (si había un dict '{}', lo ignora)
+                return datos if isinstance(datos, list) else []
+        except (json.JSONDecodeError, Exception):
+            return []
     return []
+    
+def guardar_novedades(novedades_nuevas):
+    novedades_existentes = cargar_novedades()
+    if novedades_nuevas:
+        novedades_existentes.extend(novedades_nuevas)
+    with open(FICHERO_NOVEDADES, "w", encoding="utf-8") as f:
+        json.dump(novedades_existentes, f, indent=4, ensure_ascii=False)
 
 def scan_reciente():
 
