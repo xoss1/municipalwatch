@@ -41,7 +41,13 @@ def guardar_historial(historial):
 def guardar_novedades(novedades_nuevas):
     if novedades_nuevas:
         supabase.table("novedades").insert(novedades_nuevas).execute()
-    else:
+    try:
+        # Inserta la lista directamente en Supabase
+        respuesta = supabase.table("novedades").insert(novedades_nuevas).execute()
+        print(f"🚩 ✅ Inserción correcta en Supabase. Registros creados: {len(respuesta.data)}", flush=True)
+    except Exception as e:
+        print(f"🚩 ❌ Error crítico insertando en Supabase: {e}", flush=True)
+        st.error(f"Error al guardar novedades en la base de datos: {e}")
 
 def cargar_novedades():
     try:
