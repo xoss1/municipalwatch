@@ -34,49 +34,49 @@ def guardar_historial(historial):
         json.dump(historial, f, indent=4, ensure_ascii=False)
         
 def guardar_novedades(novedades_nuevas):
-    print("\n🚩 [BANDERA 1] Entrando en guardar_novedades()")
-    print(f"🚩 [BANDERA 2] Novedades recibidas para guardar: {len(novedades_nuevas)}")
+    st.write("\n🚩 [BANDERA 1] Entrando en guardar_novedades()")
+    st.write(f"🚩 [BANDERA 2] Novedades recibidas para guardar: {len(novedades_nuevas)}")
     
     novedades_existentes = cargar_novedades()
-    print(f"🚩 [BANDERA 3] Novedades existentes leídas del archivo: {len(novedades_existentes)}")
+    st.write(f"🚩 [BANDERA 3] Novedades existentes leídas del archivo: {len(novedades_existentes)}")
 
     if novedades_nuevas:
         novedades_existentes.extend(novedades_nuevas)
-        print(f"🚩 [BANDERA 4] Lista combinada total a escribir: {len(novedades_existentes)}")
+        st.write(f"🚩 [BANDERA 4] Lista combinada total a escribir: {len(novedades_existentes)}")
     else:
-        print("🚩 [BANDERA 4] No hay novedades nuevas para añadir.")
+        st.write("🚩 [BANDERA 4] No hay novedades nuevas para añadir.")
 
     try:
         with open(FICHERO_NOVEDADES, "w", encoding="utf-8") as f:
             json.dump(novedades_existentes, f, indent=4, ensure_ascii=False)
-        print("🚩 [BANDERA 5] ✅ Archivo novedades.json GUARDADO CON ÉXITO")
+        st.write("🚩 [BANDERA 5] ✅ Archivo novedades.json GUARDADO CON ÉXITO")
     except Exception as e:
-        print(f"🚩 [BANDERA 5] ❌ ERROR CRÍTICO al escribir en el disco: {e}")
+        st.write(f"🚩 [BANDERA 5] ❌ ERROR CRÍTICO al escribir en el disco: {e}")
 
 def cargar_novedades():
-    print("  🔹 [BANDERA A] Intentando cargar_novedades()...")
+    st.write("  🔹 [BANDERA A] Intentando cargar_novedades()...")
     
     if os.path.exists(FICHERO_NOVEDADES):
-        print(f"  🔹 [BANDERA B] El archivo '{FICHERO_NOVEDADES}' EXISTE en disco.")
+        st.write(f"  🔹 [BANDERA B] El archivo '{FICHERO_NOVEDADES}' EXISTE en disco.")
         try:
             with open(FICHERO_NOVEDADES, "r", encoding="utf-8") as f:
                 datos = json.load(f)
-                print(f"  🔹 [BANDERA C] JSON leído. Tipo de dato detectado: {type(datos)}")
+                st.write(f"  🔹 [BANDERA C] JSON leído. Tipo de dato detectado: {type(datos)}")
                 
                 if isinstance(datos, list):
-                    print("  🔹 [BANDERA D] ✅ Formato válido: Es una LISTA.")
+                    st.write("  🔹 [BANDERA D] ✅ Formato válido: Es una LISTA.")
                     return datos
                 else:
-                    print(f"  🔹 [BANDERA D] ⚠️ FORMATO INCORRECTO: Se esperaba 'list' pero se encontró '{type(datos).__name__}'. Se ignoran datos.")
+                    st.write(f"  🔹 [BANDERA D] ⚠️ FORMATO INCORRECTO: Se esperaba 'list' pero se encontró '{type(datos).__name__}'. Se ignoran datos.")
                     return []
         except json.JSONDecodeError as e:
-            print(f"  🔹 [BANDERA ERROR] ❌ Error de formato JSON (archivo corrupto o vacío): {e}")
+            st.write(f"  🔹 [BANDERA ERROR] ❌ Error de formato JSON (archivo corrupto o vacío): {e}")
             return []
         except Exception as e:
-            print(f"  🔹 [BANDERA ERROR] ❌ Error inesperado abriendo archivo: {e}")
+            st.write(f"  🔹 [BANDERA ERROR] ❌ Error inesperado abriendo archivo: {e}")
             return []
             
-    print(f"  🔹 [BANDERA B] ⚠️ El archivo '{FICHERO_NOVEDADES}' NO EXISTE.")
+    st.write(f"  🔹 [BANDERA B] ⚠️ El archivo '{FICHERO_NOVEDADES}' NO EXISTE.")
     return []
 
 def scan_reciente():
