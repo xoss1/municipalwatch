@@ -9,7 +9,7 @@ import re
 from src.municipalwatch.scrapers import obtener_extractor
 from scanner import ejecutar_escaneo
 
-devMode = True
+devMode = False
 
 FICHERO_AYUNTAMIENTOS = "ayuntamientos.json"
 FICHERO_HISTORIAL = "historial_ids.json"
