@@ -269,7 +269,7 @@ if novedades:
                     label_expander = f"📍 {nov['seccion']} ({len(novedades_visibles)}) | [🔗 ver tablón de edictos]({url_tablon})"
                     
                     # Key única: incluye el índice del municipio y la opción de periodo para reactivar el filtro
-                    key_expander = f"exp_{nov['seccion']}_{nov['id_nuevo']}_{expandir_todos}"
+                    key_expander = f"exp_{nov['seccion']}_{nov['id_nuevo']}_{contenido.index(item)}_{expandir_todos}"
                     
                     with st.expander(
                         label_expander, 
