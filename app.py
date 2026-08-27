@@ -253,9 +253,10 @@ if lanzar and not scanReciente:
     )
             
     guardar_historial(historial)
-    # Guardamos las novedades en session_state para que NO desaparezcan al pulsar botones o toggles
-    st.session_state["novedades"] = novedades_temp
     guardar_novedades(novedades_temp)
+    # Guardamos las novedades en session_state para que NO desaparezcan al pulsar botones o toggles
+    st.session_state["novedades"] = cargar_novedades()
+
     ahora = dt.now() + timedelta(hours=2) 
     st.session_state["last_run"] = ahora
     st.session_state["next_run"] = ahora + timedelta(hours=2)
