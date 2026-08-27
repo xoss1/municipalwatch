@@ -39,14 +39,38 @@ def guardar_historial(historial):
         json.dump(historial, f, indent=4, ensure_ascii=False)
         
 def guardar_novedades(novedades_nuevas):
-    if novedades_nuevas:
-        supabase.table("novedades").insert(novedades_nuevas).execute()
+    # 1. Guard de seguridad
+    if not novedades_nuevas:
+        return
+
     try:
-        # Inserta la lista directamente en Supabase
-        respuesta = supabase.table("novedades").insert(novedades_nuevas).execute()
-        print(f"🚩 ✅ Inserción correcta en Supabase. Registros creados: {len(respuesta.data)}", flush=True)
+        # 2. Extraer todas las secciones que vienen en el listado nuevo
+        secciones = [n["seccion"] for n in novedades_nuevas if "seccion" in n]
+
+        # 3. Consultar a Supabase qué id_nuevo tienen actualmente esas secciones
+        res_existentes = supabase.table("novedades").select("seccion, id_nuevo").in_("seccion", secciones).execute()
+        
+        # Creamos un diccionario local para buscar rápido: {"seccion_A": 5, "seccion_B": 12}
+        existentes = {item["seccion"]: item["id_nuevo"] for item in res_existentes.data}
+
+        # 4. Filtrar: Solo nos quedamos con los registros que no existen O cuyo id_nuevo sea mayor al actual
+        registros_a_guardar = [
+            nov for nov in novedades_nuevas
+            if nov.get("seccion") not in existentes or nov.get("id_nuevo") > existentes[nov["seccion"]]
+        ]
+
+        # 5. Si hay registros válidos tras el filtro, hacemos el UPSERT
+        if registros_a_guardar:
+            respuesta = supabase.table("novedades").upsert(
+                registros_a_guardar,
+                on_conflict="seccion"  # Machaca la fila que coincida en la columna 'seccion'
+            ).execute()
+            print(f"🚩 ✅ Actualización correcta en Supabase. Registros procesados: {len(respuesta.data)}", flush=True)
+        else:
+            print("🚩 ℹ️ No se insertó nada: los registros de la lista no superan en id_nuevo a los de la base de datos.", flush=True)
+
     except Exception as e:
-        print(f"🚩 ❌ Error crítico insertando en Supabase: {e}", flush=True)
+        print(f"🚩 ❌ Error crítico actualizando en Supabase: {e}", flush=True)
         st.error(f"Error al guardar novedades en la base de datos: {e}")
 
 def cargar_novedades():
