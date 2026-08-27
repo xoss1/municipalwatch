@@ -75,8 +75,8 @@ def extract_type_3(session, item):
 
     lista_proxies = [
         "http://hfzpvcaa:s4s7wxrw1fv1@64.137.96.74:6641/",
+        "http://hfzpvcaa:s4s7wxrw1fv1@31.58.9.4:6077/",
         "http://hfzpvcaa:s4s7wxrw1fv1@31.59.20.176:6754/",
-        "http://hfzpvcaa:s4s7wxrw1fv1@31.56.127.193:7684/",
         "http://hfzpvcaa:s4s7wxrw1fv1@45.38.107.97:6014/",
         "http://hfzpvcaa:s4s7wxrw1fv1@198.105.121.200:6462/",
         "http://hfzpvcaa:s4s7wxrw1fv1@198.23.243.226:6361/",
