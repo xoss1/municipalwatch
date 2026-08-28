@@ -56,7 +56,7 @@ def guardar_novedades(novedades_nuevas):
         # 4. Filtrar: Solo nos quedamos con los registros que no existen O cuyo id_nuevo sea mayor al actual
         registros_a_guardar = [
             nov for nov in novedades_nuevas
-            if nov.get("seccion") not in existentes or nov.get("id_nuevo") > existentes[nov["seccion"]]
+            if nov.get("seccion") not in existentes or int(nov.get("id_nuevo")) > int(existentes[nov["id_nuevo"]])
         ]
 
         # 5. Si hay registros válidos tras el filtro, hacemos el UPSERT
