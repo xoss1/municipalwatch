@@ -73,6 +73,8 @@ def extract_type_3(session, item):
         "SESSION_REQUIRED": "false"
     }
 
+    #lista de proxies en webshare.io
+
     lista_proxies = [
         "http://hfzpvcaa:s4s7wxrw1fv1@64.137.96.74:6641/",
         "http://hfzpvcaa:s4s7wxrw1fv1@31.58.9.4:6077/",
