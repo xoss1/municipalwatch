@@ -78,7 +78,7 @@ def extract_type_3(session, item):
         "http://hfzpvcaa:s4s7wxrw1fv1@31.58.9.4:6077/",
         "http://hfzpvcaa:s4s7wxrw1fv1@31.59.20.176:6754/",
         "http://hfzpvcaa:s4s7wxrw1fv1@45.38.107.97:6014/",
-        "http://hfzpvcaa:s4s7wxrw1fv1@198.105.121.200:6462/",
+        "http://hfzpvcaa:s4s7wxrw1fv1@198.46.161.42:5092/",
         "http://hfzpvcaa:s4s7wxrw1fv1@198.23.243.226:6361/",
         "http://hfzpvcaa:s4s7wxrw1fv1@38.154.185.97:6370/",
         "http://hfzpvcaa:s4s7wxrw1fv1@84.247.60.125:6095/",
