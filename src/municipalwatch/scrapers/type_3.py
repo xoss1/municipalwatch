@@ -99,12 +99,12 @@ def extract_type_3(session, item):
                 session = req.Session()
                 session.verify = False
             else:
+                st.write(f"🔍 **[DEBUG] Escaneando {nombre}:** `{url}`")
                 session = requests.Session()
                 session.verify = False
                 session_aa = session.get(url, impersonate="chrome", proxies=proxies, verify=False)
                 time.sleep(1)
                 st.write(f"🔍 **[DEBUG] Estatus de sesion GET {session_aa.status_code}:** `{url}`")
-                st.write(f"🔍 **[DEBUG] Escaneando {nombre}:** `{url}`")
 
             if esMazarron or esAlhama or esNovelda:
                 response = requests.get(item["referer"], proxies=proxies, verify=False)
